@@ -5,6 +5,8 @@ import { useAppointment } from '../contexts/AppointmentContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { Toast } from 'primereact/toast'
+import Footer from '../components/Footer'
+import { HashLink } from 'react-router-hash-link'
 
 const CreateAppointment = () => {
     const params = useParams();
@@ -72,8 +74,8 @@ const CreateAppointment = () => {
                                 <h1 class="display-4">Make An Appointment For Your Family</h1>
                             </div>
                             <p class="text-white mb-5">Eirmod sed tempor lorem ut dolores. Aliquyam sit sadipscing kasd ipsum. Dolor ea et dolore et at sea ea at dolor, justo ipsum duo rebum sea invidunt voluptua. Eos vero eos vero ea et dolore eirmod et. Dolores diam duo invidunt lorem. Elitr ut dolores magna sit. Sea dolore sanctus sed et. Takimata takimata sanctus sed.</p>
-                            <a class="btn btn-dark rounded-pill py-3 px-5 me-3" href="">Find Doctor</a>
-                            <a class="btn btn-outline-dark rounded-pill py-3 px-5" href="">Read More</a>
+                            <HashLink to='/#doctors' class="btn btn-dark rounded-pill py-3 px-5 me-3">Find Doctor</HashLink>
+                            <HashLink class="btn btn-outline-dark rounded-pill py-3 px-5">Read More</HashLink>
                         </div>
                         <div class="col-lg-6">
                             <div class="bg-white text-center rounded p-5">
@@ -127,33 +129,7 @@ const CreateAppointment = () => {
             </div>
             {/* <!-- Appointment End --> */}
 
-            {/* <!-- Footer Start --> */}
-            <div className="container-fluid footer_bg text-light mt-5 py-5">
-                <div className="container py-5">
-                    <div className="row g-5">
-                        <div className="col-lg-3 col-md-6">
-                            <h4 className="d-inline-block text-primary text-uppercase border-bottom border-5 border-secondary mb-4">Get In Touch</h4>
-                            <p className="mb-4">No dolore ipsum accusam no lorem. Invidunt sed clita kasd clita et et dolor sed dolor</p>
-                            <p className="mb-2"><i className="fa-solid fa-map-marker-alt text-primary me-3"></i>123 Street, New York, USA</p>
-                            <p className="mb-2"><i className="fa-solid fa-envelope text-primary me-3"></i>info@example.com</p>
-                            <p className="mb-0"><i className="fa-solid fa-phone-alt text-primary me-3"></i>+012 345 67890</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="container-fluid footer_bg text-light border-top border-secondary py-4">
-                <div className="container">
-                    <div className="row g-5">
-                        <div className="col-md-6 text-center text-md-start">
-                            <p className="mb-md-0">&copy; <a className="text-primary" href="#">Your Site Name</a>. All Rights Reserved.</p>
-                        </div>
-                        <div className="col-md-6 text-center text-md-end">
-                            <p className="mb-0">Designed by <a className="text-primary" href="https://htmlcodex.com">HTML Codex</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* <!-- Footer End --> */}
+            <Footer />
         </div>
     )
 }

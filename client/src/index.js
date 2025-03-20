@@ -6,20 +6,23 @@ import { UserProvider } from './contexts/UserContext';
 import { ClinicProvider } from './contexts/ClinicContext';
 import { AppointmentProvider } from './contexts/AppointmentContext';
 import { NotesProvider } from './contexts/NotesContext';
+import { ContactProvider } from './contexts/ContactContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthProvider>
-      <ClinicProvider>
-        <UserProvider>
-          <AppointmentProvider>
-            <NotesProvider>
-              <App />
-            </NotesProvider>
-          </AppointmentProvider>
-        </UserProvider>
-      </ClinicProvider>
+      <ContactProvider>
+        <ClinicProvider>
+          <UserProvider>
+            <AppointmentProvider>
+              <NotesProvider>
+                <App />
+              </NotesProvider>
+            </AppointmentProvider>
+          </UserProvider>
+        </ClinicProvider>
+      </ContactProvider>
     </AuthProvider>
   </React.StrictMode>
 );

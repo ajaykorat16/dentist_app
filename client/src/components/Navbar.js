@@ -65,6 +65,12 @@ const Navbar = () => {
                                     Login
                                 </Link>
                             )}
+                              <Link
+                                to="/contact-us"
+                                className={`nav-item nav-link ${isActive('/contact-us') ? 'active' : ''}`}
+                            >
+                                Contact
+                            </Link>
                         </div>
                     </div>
                 </nav>

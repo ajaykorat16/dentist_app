@@ -5,9 +5,11 @@ const multer = require('multer');
 const path = require('path')
 const { auth, isAdmin, isDoctor } = require('../middleware/auth');
 
-const { signupUser, loginUser, createUser, getAllUsers, getSingleUser, updateUser, deleteUser, updatePassword, getAllDoctors } = require('../controllers/users');
+const { signupUser, loginUser, createUser, getAllUsers, getSingleUser, updateUser, deleteUser, updatePassword, getAllDoctors, getAllActions } = require('../controllers/users');
 
 router.get('/', auth, isAdmin, getAllUsers)
+
+router.get('/actions', auth, isAdmin, getAllActions)
 
 router.get('/doctors', getAllDoctors)
 

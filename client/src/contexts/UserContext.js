@@ -25,6 +25,18 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const getAllActions = async (currentPage, rowsPerPage, sortField, sortOrder, filter) => {
+        try {
+            let { data } = await axios.get(`${baseURL}/user/actions?page=${currentPage}&limit=${rowsPerPage}&sortOrder=${sortOrder}
+                                             &sortField=${sortField}&filter=${filter}`, { headers })
+            if (data.error === false) {
+                return data
+            }
+        } catch (error) {
+            toast.current?.show({ severity: 'error', summary: 'Actions', detail: 'An error occurred. Please try again later.', life: 3000 })
+        }
+    }
+
     const getAllDoctors = async () => {
         try {
             let { data } = await axios.get(`${baseURL}/user/doctors`, { headers })
@@ -137,7 +149,7 @@ const UserProvider = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ getAllUsers, getAllDoctors, getSingleUser, createUser, updateUser, updatePassword, deleteUser }}>
+        <UserContext.Provider value={{ getAllUsers, getAllActions, getAllDoctors, getSingleUser, createUser, updateUser, updatePassword, deleteUser }}>
             {children}
         </UserContext.Provider>
     )

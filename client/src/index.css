@@ -487,3 +487,18 @@
 .appointment_table {
   width: 80%;
 }
+
+.icon_bg {
+  background-color: #13C5DD;
+}
+
+.light_border {
+  border: solid 1px #F8F9FA;
+}
+
+.audit_data {
+  max-width: 500px;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  height: fit-content;
+}

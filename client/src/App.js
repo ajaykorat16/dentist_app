@@ -15,6 +15,9 @@ import HomePage from './pages/HomePage';
 import CreateAppointment from './pages/CreateAppointment';
 import UserRoutes from './Routes/UserRoutes';
 import UserAppointment from './pages/UserAppointment';
+import ContactUs from './pages/ContactUs';
+import ContactUsList from './pages/ContactUsList';
+import ActionList from './pages/ActionList';
 
 function App() {
   return (
@@ -23,15 +26,18 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/contact-us" element={<ContactUs />} />
 
         <Route path="/user" element={<UserRoutes />}>
-          <Route path="appointment/:id" element={<CreateAppointment />} /> {/* Relative path */}
-          <Route path="appointments" element={<UserAppointment />} /> {/* Relative path */}
+          <Route path="appointment/:id" element={<CreateAppointment />} />
+          <Route path="appointments" element={<UserAppointment />} />
         </Route>
 
         <Route path="/admin" element={<AdminRoutes />}>
           <Route path="user/list" element={<UserList />} />
           <Route path="clinic/list" element={<ClnicList />} />
+          <Route path="contact-us/list" element={<ContactUsList />} />
+          <Route path="action/list" element={<ActionList />} />
         </ Route>
 
         <Route path="/doctor" element={<DoctorRoute />}>

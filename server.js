@@ -10,6 +10,7 @@ const user = require("./routers/users")
 const clinic = require("./routers/clinic")
 const appointment = require("./routers/appointment")
 const treatmentNote = require("./routers/treamtmentNotes")
+const contactUs = require("./routers/contactUs")
 
 const app = express()
 const server = createServer(app);
@@ -25,7 +26,8 @@ app.use("/user", user)
 app.use("/clinic", clinic)
 app.use("/appointment", appointment)
 app.use("/note", treatmentNote)
+app.use("/contact-us", contactUs)
 
 server.listen(PORT, () => {
-  console.log(`Server running in http://localhost:${PORT}`);  
+  console.log(`Server running in http://localhost:${PORT}`);
 })

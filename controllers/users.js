@@ -66,7 +66,7 @@ const signupUser = async (req, res) => {
         const emailContent = compileTemplate(emailTemplateData, './templates/welcomeEmail.html');
 
         sendMailAsync({
-            from: process.env.ADMIN_EMAIL,
+            from: process.env.MAIL_AUTH_USER,
             to: email,
             subject: 'Welcome to Our Service!',
             html: emailContent,
@@ -597,12 +597,76 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const getAllActions = async (req, res) => {
+    let { sortField, sortOrder, page, limit, filter } = req.query;
+
+    filter = filter || null;
+    page = page ? parseInt(page) : null;
+    limit = limit ? parseInt(limit) : null;
+    sortOrder = parseInt(sortOrder) || -1;
+    sortField = sortField || 'created_at';
+
+    try {
+        let baseQuery = knex('users_auditing')
+            .leftJoin('users', 'users_auditing.user_id', 'users.id')
+            .leftJoin('user_role', 'users.role_id', 'user_role.id')
+            .select(
+                'users_auditing.*',
+                'users.first_name',
+                'users.last_name',
+                'user_role.name as role',
+                knex.raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name")
+            );
+
+        if (filter && filter !== 'null') {
+            baseQuery = baseQuery.where((qb) => {
+                qb.where('users_auditing.action', 'like', `%${filter}%`)
+                    .orWhere('users_auditing.description', 'like', `%${filter}%`)
+                    .orWhere('users.first_name', 'like', `%${filter}%`)
+                    .orWhere('users.last_name', 'like', `%${filter}%`)
+                    .orWhere('user_role.name', 'like', `%${filter}%`);
+            });
+        }
+
+        if (sortField !== 'undefined' && sortOrder) {
+            baseQuery = baseQuery.orderBy(sortField, sortOrder === -1 ? 'desc' : 'asc');
+        }
+
+        const totalCountQuery = knex('users_auditing')
+            .count('* as totalCount')
+            .first();
+
+        const totalCountResult = await totalCountQuery;
+        const totalCount = totalCountResult.totalCount;
+
+        if (page && limit) {
+            const offset = (page - 1) * limit;
+            baseQuery = baseQuery.offset(offset).limit(limit);
+        }
+
+        const results = await baseQuery;
+
+        return res.status(200).send({
+            error: false,
+            message: "All actions retrieved successfully.",
+            data: results,
+            currentPage: page,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount: totalCount
+        });
+    } catch (error) {
+        console.log(error.message);
+        return res.status(500).send("Server error");
+    }
+};
+
 module.exports = {
     signupUser,
     loginUser,
     createUser,
     getAllUsers,
     getAllDoctors,
+    getAllActions,
     getSingleUser,
     updateUser,
     updatePassword,

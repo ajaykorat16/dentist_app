@@ -61,7 +61,7 @@ const createAppointment = async (req, res) => {
         await knex('treatment_notes').insert({ appointment_id: newAppointment, patient_information: "", prescription: "" });
 
         sendMailAsync({
-            from: process.env.ADMIN_EMAIL,
+            from: process.env.MAIL_AUTH_USER,
             to: clinic.email,
             subject: 'New Appointment Booked',
             html: compileTemplate({
@@ -365,7 +365,7 @@ const updateAppointment = async (req, res) => {
             const emailContent = compileTemplate(emailTemplateData, './templates/appointmentRescheduled.html');
 
             sendMailAsync({
-                from: process.env.ADMIN_EMAIL,
+                from: process.env.MAIL_AUTH_USER,
                 to: doctor.email,
                 subject: 'Appointment Rescheduled',
                 html: emailContent,
@@ -455,7 +455,7 @@ const updateStatus = async (req, res) => {
         const emailContent = compileTemplate(emailTemplateData, './templates/appointmentCompleted.html');
 
         sendMailAsync({
-            from: process.env.ADMIN_EMAIL,
+            from: process.env.MAIL_AUTH_USER,
             to: existingAppointment.patient_email,
             subject: 'Appointment Completed',
             html: emailContent,
@@ -542,7 +542,7 @@ const cancelAppointment = async (req, res) => {
         const emailContent = compileTemplate(emailTemplateData, './templates/appointmentCancelled.html');
 
         sendMailAsync({
-            from: process.env.ADMIN_EMAIL,
+            from: process.env.MAIL_AUTH_USER,
             to: doctor.email,
             subject: 'Appointment Cancelled',
             html: emailContent,
