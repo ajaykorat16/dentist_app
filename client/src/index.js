@@ -1,0 +1,29 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { AuthProvider } from './contexts/AuthContext';
+import { UserProvider } from './contexts/UserContext';
+import { ClinicProvider } from './contexts/ClinicContext';
+import { AppointmentProvider } from './contexts/AppointmentContext';
+import { NotesProvider } from './contexts/NotesContext';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <AuthProvider>
+      <ClinicProvider>
+        <UserProvider>
+          <AppointmentProvider>
+            <NotesProvider>
+              <App />
+            </NotesProvider>
+          </AppointmentProvider>
+        </UserProvider>
+      </ClinicProvider>
+    </AuthProvider>
+  </React.StrictMode>
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

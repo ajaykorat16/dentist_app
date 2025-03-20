@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            /* color: #333333; */
+        }
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666666;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            Welcome to {{domain_name}}
+        </div>
+        <div class="content">
+            <p>Dear {{first_name}} {{last_name}},</p>
+            <p>Thank you for signing up with us! We are thrilled to have you as part of our community.</p>
+            <p>Our clinic is dedicated to providing the best care and services to meet your health needs. If you have any questions or need assistance, feel free to reach out to us anytime.</p>
+            <p>We look forward to serving you!</p>
+            <p>Warm regards,</p>
+            <p>The {{domain_name}} Team</p>
+        </div>
+        <div class="footer">
+            &copy; {{current_year}} {{domain_name}}. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
