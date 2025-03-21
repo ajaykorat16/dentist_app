@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, createContext, useRef } from "react";
 import { baseURL } from "../lib";
 import axios from 'axios'
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext()
 
@@ -14,6 +15,7 @@ const AuthProvider = ({ children }) => {
     })
 
     const toast = useRef(null);
+    const navigate = useNavigate()
 
     const logout = () => {
         try {
@@ -25,6 +27,7 @@ const AuthProvider = ({ children }) => {
                     token: ""
                 })
                 setIsLoggedIn(false)
+                navigate("/login")
             }
         } catch (error) {
             console.log(error);
@@ -99,16 +102,34 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        const data = localStorage.getItem('auth')
+        const data = localStorage.getItem("auth");
         if (data) {
-            const parseData = JSON.parse(data)
+            const parseData = JSON.parse(data);
             setAuth({
-                ...auth,
                 user: parseData.user,
-                token: parseData.token
-            })
+                token: parseData.token,
+                permissions: parseData.permissions,
+            });
+            setIsLoggedIn(true);
         }
-    }, [])
+    
+        if (auth?.token) {
+            axios.defaults.headers.common["Authorization"] = `Bearer ${auth.token}`;
+        }
+    
+        const interceptor = axios.interceptors.response.use(
+            (response) => response, 
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    logout(); 
+                }
+                return Promise.reject(error); 
+            }
+        );
+    
+        return () => axios.interceptors.response.eject(interceptor);
+    }, [auth.token]);
+    
 
     return (
         <AuthContext.Provider value={{ auth, login, register, logout, isLoggedIn, toast }}>

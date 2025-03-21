@@ -7,23 +7,26 @@ import { ClinicProvider } from './contexts/ClinicContext';
 import { AppointmentProvider } from './contexts/AppointmentContext';
 import { NotesProvider } from './contexts/NotesContext';
 import { ContactProvider } from './contexts/ContactContext';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <ContactProvider>
-        <ClinicProvider>
-          <UserProvider>
-            <AppointmentProvider>
-              <NotesProvider>
-                <App />
-              </NotesProvider>
-            </AppointmentProvider>
-          </UserProvider>
-        </ClinicProvider>
-      </ContactProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <ContactProvider>
+          <ClinicProvider>
+            <UserProvider>
+              <AppointmentProvider>
+                <NotesProvider>
+                  <App />
+                </NotesProvider>
+              </AppointmentProvider>
+            </UserProvider>
+          </ClinicProvider>
+        </ContactProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

@@ -3,7 +3,7 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserList from './pages/UserList';
@@ -21,30 +21,28 @@ import ActionList from './pages/ActionList';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/contact-us" element={<ContactUs />} />
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/contact-us" element={<ContactUs />} />
 
-        <Route path="/user" element={<UserRoutes />}>
-          <Route path="appointment/:id" element={<CreateAppointment />} />
-          <Route path="appointments" element={<UserAppointment />} />
-        </Route>
+      <Route path="/user" element={<UserRoutes />}>
+        <Route path="appointment/:id" element={<CreateAppointment />} />
+        <Route path="appointments" element={<UserAppointment />} />
+      </Route>
 
-        <Route path="/admin" element={<AdminRoutes />}>
-          <Route path="user/list" element={<UserList />} />
-          <Route path="clinic/list" element={<ClnicList />} />
-          <Route path="contact-us/list" element={<ContactUsList />} />
-          <Route path="action/list" element={<ActionList />} />
-        </ Route>
+      <Route path="/admin" element={<AdminRoutes />}>
+        <Route path="user/list" element={<UserList />} />
+        <Route path="clinic/list" element={<ClnicList />} />
+        <Route path="contact-us/list" element={<ContactUsList />} />
+        <Route path="action/list" element={<ActionList />} />
+      </ Route>
 
-        <Route path="/doctor" element={<DoctorRoute />}>
-          <Route path="appointment/list" element={<DoctorAppointment />} />
-        </ Route>
-      </Routes>
-    </BrowserRouter >
+      <Route path="/doctor" element={<DoctorRoute />}>
+        <Route path="appointment/list" element={<DoctorAppointment />} />
+      </ Route>
+    </Routes>
   );
 }
 
