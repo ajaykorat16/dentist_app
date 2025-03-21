@@ -78,7 +78,7 @@ const HomePage = () => {
                             <h1 className="display-1 text-white mb-md-4">Best Healthcare Solution In Your City</h1>
                             <div className="pt-2">
                                 <HashLink smooth to="#doctors" className="btn btn-light rounded-pill py-md-3 px-md-5 mx-2">Find Doctor</HashLink>
-                                <Link to={auth?.token && `/user/appointments`} href="" className="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">Appointment</Link>
+                                <Link to={auth?.token ? `/user/appointments`: '/login'} className="btn btn-outline-light rounded-pill py-md-3 px-md-5 mx-2">My Appointments</Link>
                             </div>
                         </div>
                     </div>
@@ -184,11 +184,11 @@ const HomePage = () => {
                         <OwlCarousel className="owl-theme" {...options}>
                             {doctors && doctors.length > 0 && (
                                 doctors.map((doctor) => (
-                                    <Link to={auth?.token && `/user/appointment/${doctor?.id}`} key={doctor?.id} className="team-item">
+                                    <Link to={auth?.token ? `/user/appointment/${doctor?.id}` : '/login'} key={doctor?.id} className="team-item">
                                         <div className="row g-0 bg-light rounded overflow-hidden">
                                             <div className="col-12 col-sm-5 h-100">
                                                 <img
-                                                    className="img-fluid h-100"
+                                                    className="img-fluid h-100 w-auto"
                                                     src={doctor.photo || "/images/team-1.jpg"}
                                                     alt={`${doctor.first_name} ${doctor.last_name}`}
                                                     style={{ objectFit: "cover" }}

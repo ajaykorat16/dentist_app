@@ -58,7 +58,6 @@ const createAppointment = async (req, res) => {
         const [newAppointment] = await knex('appointment')
             .insert({ doctor_id, patient_id, appointment_time, medical_history })
             .returning('id');
-        await knex('treatment_notes').insert({ appointment_id: newAppointment, patient_information: "", prescription: "" });
 
         sendMailAsync({
             from: process.env.MAIL_AUTH_USER,
@@ -486,12 +485,13 @@ const cancelAppointment = async (req, res) => {
             action: 'edited',
             description: 'appointment status validation error',
             data: { ...req.body, ...req.params },
-        })
+        });
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { id } = req.params;
     const { cancel_reason } = req.body;
+
     let auditData = {
         user_id: req.user.id,
         action: 'edited',
@@ -517,7 +517,6 @@ const cancelAppointment = async (req, res) => {
             status: 'cancelled',
             cancel_reason
         };
-
         await knex('appointment').where('id', id).update(updateAppoinmentDetail);
 
         const [doctor] = await knex('users')
@@ -526,32 +525,54 @@ const cancelAppointment = async (req, res) => {
             .where('users.id', existingAppointment.doctor_id);
 
         const [patient] = await knex('users')
-            .select('first_name', 'last_name')
+            .select('first_name', 'last_name', 'email')
             .where('id', existingAppointment.patient_id);
 
-        const emailTemplateData = {
-            doctor_name: `${doctor.first_name} ${doctor.last_name}`,
+        let emailTemplateData = {
             patient_name: `${patient.first_name} ${patient.last_name}`,
+            doctor_name: `${doctor.first_name} ${doctor.last_name}`,
             appointment_date: new Date(existingAppointment.appointment_time).toLocaleDateString(),
             appointment_time: new Date(existingAppointment.appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
             cancel_reason: cancel_reason || "No reason provided",
             clinic_name: doctor.clinic_name,
-            current_year: new Date().getFullYear()
+            current_year: new Date().getFullYear(),
         };
 
-        const emailContent = compileTemplate(emailTemplateData, './templates/appointmentCancelled.html');
+        let emailContent, recipientEmail;
+
+        if (req.user.role_id === 3) {
+            emailTemplateData = {
+                ...emailTemplateData,
+                is_doctor: false
+            };
+            emailContent = compileTemplate(emailTemplateData, './templates/appointmentCancelled.html');
+            recipientEmail = doctor.email;
+        } else if (req.user.role_id === 2) {
+            emailTemplateData = {
+                ...emailTemplateData,
+                is_doctor: true
+            };
+            emailContent = compileTemplate(emailTemplateData, './templates/appointmentCancelled.html');
+            recipientEmail = patient.email;
+        } else {
+            createUserAuditing(auditData);
+            return res.status(403).json({
+                error: true,
+                message: "Unauthorized role to cancel appointment",
+            });
+        }
 
         sendMailAsync({
             from: process.env.MAIL_AUTH_USER,
-            to: doctor.email,
+            to: recipientEmail,
             subject: 'Appointment Cancelled',
             html: emailContent,
         });
 
         auditData = {
             ...auditData,
-            description: `appointment status cancel successfully`
-        }
+            description: `appointment status cancel successfully`,
+        };
         createUserAuditing(auditData);
 
         return res.status(200).json({

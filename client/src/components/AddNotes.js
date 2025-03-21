@@ -4,9 +4,10 @@ import { Dialog } from 'primereact/dialog'
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { CCol, CForm, CFormLabel, CFormTextarea, CRow } from '@coreui/react'
 import { useNote } from '../contexts/NotesContext'
+import { useAppointment } from '../contexts/AppointmentContext';
 
 function AddNotes({ editAppointmentId, setEditAppointmentId, editMode, setEditMode, fetchAppointments }) {
-    const { getSingleNote, updateNote } = useNote()
+    const { createNote } = useNote()
 
     const [validated, setValidated] = useState(false);
     const [credential, setCredential] = useState({
@@ -24,19 +25,6 @@ function AddNotes({ editAppointmentId, setEditAppointmentId, editMode, setEditMo
         });
     };
 
-    const fetchSingleNote = async () => {
-        try {
-            const note = await getSingleNote(editAppointmentId);
-            setCredential(note);
-        } catch (error) {
-            console.error('Error fetching single note', error);
-        }
-    };
-
-    useEffect(() => {
-        if (editMode && editAppointmentId) fetchSingleNote();
-    }, [editMode, editAppointmentId]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -53,7 +41,7 @@ function AddNotes({ editAppointmentId, setEditAppointmentId, editMode, setEditMo
         } else {
             try {
                 if (editMode && editAppointmentId) {
-                    const data = await updateNote(editAppointmentId, credential)
+                    const data = await createNote({ ...credential, appointment_id: editAppointmentId })
                     if (!data.error) {
                         handleClose()
                         fetchAppointments()

@@ -40,20 +40,20 @@ const NotesProvider = ({ children }) => {
             const { data } = await axios.post(`${baseURL}/note/create`, noteDetail, { headers });
             if (data.error === false) {
                 setTimeout(function () {
-                    toast.current?.show({ severity: 'success', summary: 'Note', detail: data.message, life: 3000 })
+                    toast.current?.show({ severity: 'success', summary: 'Appointment', detail: data.message, life: 3000 })
                 }, 500);
                 return data
             } else {
-                toast.current?.show({ severity: 'error', summary: 'Note', detail: data.message, life: 3000 })
+                toast.current?.show({ severity: 'error', summary: 'Appointment', detail: data.message, life: 3000 })
             }
         } catch (error) {
             if (error.response) {
                 const errors = error.response.data.errors;
                 if (errors && Array.isArray(errors) && errors.length > 0) {
-                    toast.current?.show({ severity: 'error', summary: 'Note', detail: errors[0].msg, life: 3000 })
+                    toast.current?.show({ severity: 'error', summary: 'Appointment', detail: errors[0].msg, life: 3000 })
                 }
             } else {
-                toast.current?.show({ severity: 'error', summary: 'Note', detail: 'An error occurred. Please try again later.', life: 3000 })
+                toast.current?.show({ severity: 'error', summary: 'Appointment', detail: 'An error occurred. Please try again later.', life: 3000 })
             }
         }
     }

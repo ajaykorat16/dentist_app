@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import { useNote } from '../contexts/NotesContext';
 import { useAppointment } from '../contexts/AppointmentContext';
 
-function ViewNotes({ appointmentId, setAppointmentId, noteView, setNoteView }) {
+function ViewNotes({ appointmentId, setAppointmentId, noteView, setNoteView, role = 'admin' }) {
     const { getSingleNote } = useNote();
     const { getSingleAppointment } = useAppointment()
 
@@ -53,24 +53,24 @@ function ViewNotes({ appointmentId, setAppointmentId, noteView, setNoteView }) {
                     <p>Loading note details...</p>
                 ) : (
                     <div>
-                    <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                        <span style={{ fontWeight: 'bold' }}>Patient Information:</span>
-                        <p>{noteDetails?.patient_information || 'No information available'}</p>
+                        <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                            <span style={{ fontWeight: 'bold' }}>Medical History:</span>
+                            <p>{noteDetails?.medical_history || 'No medical history available'}</p>
+                        </div>
+                        <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                            <span style={{ fontWeight: 'bold' }}>{role === 'patient' ? 'Your' : 'Patient'} Information:</span>
+                            <p>{noteDetails?.patient_information || 'No information available'}</p>
+                        </div>
+                        <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                            <span style={{ fontWeight: 'bold' }}>Prescription:</span>
+                            <p>{noteDetails?.prescription || 'No prescription available'}</p>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button variant="contained" color="primary" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </div>
                     </div>
-                    <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                        <span style={{ fontWeight: 'bold' }}>Prescription:</span>
-                        <p>{noteDetails?.prescription || 'No prescription available'}</p>
-                    </div>
-                    <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                        <span style={{ fontWeight: 'bold' }}>Medical History:</span>
-                        <p>{noteDetails?.medical_history || 'No medical history available'}</p>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button variant="contained" color="primary" onClick={handleClose}>
-                            Close
-                        </Button>
-                    </div>
-                </div>                
                 )}
             </Dialog>
         </div>

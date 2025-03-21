@@ -7,7 +7,7 @@ const { getAllNotes, getSingleNote, createNote, updateNote, deleteNote } = requi
 
 router.get('/', auth, isDoctor, getAllNotes)
 
-router.get('/:id', auth, isDoctor, getSingleNote)
+router.get('/:id', auth, getSingleNote)
 
 router.post("/create",
     check('appointment_id', 'Appointment is required.').notEmpty(),

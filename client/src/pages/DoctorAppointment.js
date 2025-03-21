@@ -14,6 +14,7 @@ import { Button } from 'primereact/button';
 import { format } from 'date-fns';
 import 'primeicons/primeicons.css';
 import { CFormSelect } from '@coreui/react';
+import CancelAppointment from '../components/CancelAppointment';
 
 function DoctorAppointment() {
     const { getAllAppointment, updateAppointmentStatus } = useAppointment();
@@ -32,6 +33,7 @@ function DoctorAppointment() {
     const [debouncedFilter, setDebouncedFilter] = useState('');
     const [noteView, setNoteView] = useState(false);
     const [statusFilter, setStatusFilter] = useState('scheduled');
+    const [cancelMode, setCancelMode] = useState(false);
 
     const statusOptions = [
         { label: 'Scheduled', value: 'scheduled' },
@@ -93,9 +95,9 @@ function DoctorAppointment() {
         setEditMode(true);
     };
 
-    const handleUpdateStatus = async (appointmentId) => {
-        await updateAppointmentStatus(appointmentId);
-        fetchAppointment();
+    const handleCancel = (appointmentId) => {
+        setEditAppointmentId(appointmentId);
+        setCancelMode(true);
     };
 
     const formatAppointmentTime = (rowData) => {
@@ -126,13 +128,20 @@ function DoctorAppointment() {
                 />
                 <div className="px-4 py-2">
                     <ConfirmDialog />
+                    <CancelAppointment
+                        editAppointmentId={editAppointmentId}
+                        setEditAppointmentId={setEditAppointmentId}
+                        editMode={cancelMode}
+                        setEditMode={setCancelMode}
+                        fetchAppointments={fetchAppointment}
+                    />
                     {editMode && editAppointmentId && (
                         <AddNotes
                             editMode={editMode}
                             editAppointmentId={editAppointmentId}
                             setEditAppointmentId={setEditAppointmentId}
                             setEditMode={setEditMode}
-                            fetchAppointment={fetchAppointment}
+                            fetchAppointments={fetchAppointment}
                         />
                     )}
                     {noteView && (
@@ -231,7 +240,7 @@ function DoctorAppointment() {
                                                 severity="info"
                                                 className="ms-2"
                                                 title="Edit"
-                                                onClick={() => handleUpdate(rowData?.id)}
+                                                onClick={() => handleCancel(rowData?.id)}
                                                 raised
                                                 style={{ height: '30px', width: '30px' }}
                                             ></Button>
@@ -243,7 +252,7 @@ function DoctorAppointment() {
                                                 rounded
                                                 className="ms-2"
                                                 severity="success"
-                                                onClick={() => handleUpdateStatus(rowData?.id)}
+                                                onClick={() => handleUpdate(rowData?.id)}
                                                 style={{ height: '30px', width: '30px' }}
                                                 raised
                                             />

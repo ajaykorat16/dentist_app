@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const { knex } = require("../database/db");
-const { createUserAuditing } = require("../helpers/helper");
+const { createUserAuditing, compileTemplate, sendMailAsync } = require("../helpers/helper");
 
 const createNote = async (req, res) => {
     const errors = validationResult(req);
@@ -23,7 +23,6 @@ const createNote = async (req, res) => {
     };
 
     try {
-
         const noteDetail = {
             appointment_id,
             patient_information,
@@ -31,6 +30,48 @@ const createNote = async (req, res) => {
         };
 
         const [newNote] = await knex('treatment_notes').insert(noteDetail);
+
+        const existingAppointment = await knex('appointment')
+            .join('users as patients', 'appointment.patient_id', '=', 'patients.id')
+            .join('users as doctors', 'appointment.doctor_id', '=', 'doctors.id')
+            .join('clinic', 'doctors.clinic_id', '=', 'clinic.id')
+            .select(
+                'appointment.appointment_time',
+                'patients.email as patient_email',
+                'patients.first_name as patient_first_name',
+                'patients.last_name as patient_last_name',
+                'clinic.name as clinic_name'
+            )
+            .where('appointment.id', appointment_id)
+            .first();
+
+        if (!existingAppointment) {
+            createUserAuditing(auditData);
+            return res.status(404).json({
+                error: true,
+                message: "Appointment not found",
+            });
+        }
+
+        await knex('appointment').where('id', appointment_id).update({ status: "completed" });
+
+        const emailTemplateData = {
+            patient_name: `${existingAppointment.patient_first_name} ${existingAppointment.patient_last_name}`,
+            appointment_date: new Date(existingAppointment.appointment_time).toLocaleDateString(),
+            appointment_time: new Date(existingAppointment.appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            clinic_name: existingAppointment.clinic_name,
+            prescription: prescription || "No prescription provided.",
+            current_year: new Date().getFullYear(),
+        };
+
+        const emailContent = compileTemplate(emailTemplateData, './templates/appointmentCompleted.html');
+
+        sendMailAsync({
+            from: process.env.MAIL_AUTH_USER,
+            to: existingAppointment.patient_email,
+            subject: 'Appointment Completed',
+            html: emailContent,
+        });
 
         auditData = {
             ...auditData,
@@ -40,7 +81,7 @@ const createNote = async (req, res) => {
 
         return res.status(201).json({
             error: false,
-            message: "Treatment note created successfully.",
+            message: "Appointment completed successfully.",
             note: newNote
         });
     } catch (error) {
@@ -100,6 +141,7 @@ const getSingleNote = async (req, res) => {
         const { id } = req.params
 
         const appointment = await knex('treatment_notes').where('appointment_id', id).first()
+
         if (!appointment) {
             return res.status(200).json({
                 error: true,

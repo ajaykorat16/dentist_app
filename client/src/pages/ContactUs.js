@@ -6,6 +6,7 @@ import { CForm, CFormInput, CFormTextarea } from '@coreui/react'
 import Footer from '../components/Footer'
 import { useContact } from '../contexts/ContactContext'
 import { useNavigate } from 'react-router-dom'
+import { contactDetails } from '../lib'
 
 const ContactUs = () => {
     const navigate = useNavigate()
@@ -69,7 +70,7 @@ const ContactUs = () => {
                                 <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
                                     <i className="fa-solid fa-2x fa-location-arrow text-white" style={{ transform: "rotate(15deg)" }}></i>
                                 </div>
-                                <h6 className="mb-0">123 Street, New York, USA</h6>
+                                <h6 className="mb-0">{contactDetails.address}</h6>
                             </div>
                         </div>
                         <div className="col-lg-4">
@@ -77,7 +78,7 @@ const ContactUs = () => {
                                 <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
                                     <i className="fa-solid fa-phone-flip fa-2x text-white" style={{ transform: "rotate(15deg)" }}></i>
                                 </div>
-                                <h6 className="mb-0">+012 345 6789</h6>
+                                <h6 className="mb-0">{contactDetails.phone}</h6>
                             </div>
                         </div>
                         <div className="col-lg-4">
@@ -85,7 +86,7 @@ const ContactUs = () => {
                                 <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
                                     <i className="fa-solid fa-envelope-open fa-2x text-white" style={{ transform: "rotate(15deg)" }}></i>
                                 </div>
-                                <h6 className="mb-0">info@example.com</h6>
+                                <h6 className="mb-0">{contactDetails.email}</h6>
                             </div>
                         </div>
                     </div>
