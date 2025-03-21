@@ -210,10 +210,13 @@ const createUser = async (req, res) => {
             last_name,
             email,
             role_id,
-            clinic_id: clinic_id?.value ? clinic_id?.value : null,
             degree: degree ? degree : null,
             password: hashedPassword
         };
+
+        if (role_id == 2) {
+            userDetail.clinic_id = clinic_id?.value ? clinic_id?.value : null
+        }
 
         if (photo && isBase64Image(photo)) {
             const uploadPath = "./uploads/images/user/";
@@ -327,12 +330,13 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-
 const getAllDoctors = async (req, res) => {
     try {
+        const { id } = req.params
         const doctors = await knex('users')
             .where('role_id', 2)
             .andWhere('is_active', 1)
+            .andWhere('clinic_id', id)
             .select('id', 'first_name', 'last_name', 'email', 'clinic_id', 'role_id', 'degree', 'created_at', 'photo')
 
         const formattedDoctors = doctors.map((d) => {
@@ -353,7 +357,6 @@ const getAllDoctors = async (req, res) => {
         res.status(500).send("Server error");
     }
 };
-
 
 const getSingleUser = async (req, res) => {
     try {

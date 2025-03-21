@@ -54,7 +54,7 @@ function ViewNotes({ appointmentId, setAppointmentId, noteView, setNoteView, rol
                 ) : (
                     <div>
                         <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-                            <span style={{ fontWeight: 'bold' }}>Medical History:</span>
+                            <span style={{ fontWeight: 'bold' }}>Description:</span>
                             <p>{noteDetails?.medical_history || 'No medical history available'}</p>
                         </div>
                         <div style={{ marginBottom: '1rem', wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>

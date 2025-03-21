@@ -23,6 +23,16 @@ const ClinicProvider = ({ children }) => {
             toast.current?.show({ severity: 'error', summary: 'Clinic', detail: 'An error occurred. Please try again later.', life: 3000 })
         }
     }
+    const getClinicsWithoutPagination = async () => {
+        try {
+            let { data } = await axios.get(`${baseURL}/clinic/without-pagination`)
+            if (data.error === false) {
+                return data
+            }
+        } catch (error) {
+            toast.current?.show({ severity: 'error', summary: 'Clinic', detail: 'An error occurred. Please try again later.', life: 3000 })
+        }
+    }
 
     const getSingleClinic = async (id) => {
         try {
@@ -102,7 +112,7 @@ const ClinicProvider = ({ children }) => {
     }
 
     return (
-        <ClinicContext.Provider value={{ getAllClinics, getSingleClinic, createClinic, updateClinic, deleteClinic }}>
+        <ClinicContext.Provider value={{ getAllClinics, getSingleClinic, getClinicsWithoutPagination, createClinic, updateClinic, deleteClinic }}>
             {children}
         </ClinicContext.Provider>
     )

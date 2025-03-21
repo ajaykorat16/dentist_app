@@ -37,9 +37,9 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const getAllDoctors = async () => {
+    const getAllDoctors = async (clinicId) => {
         try {
-            let { data } = await axios.get(`${baseURL}/user/doctors`, { headers })
+            let { data } = await axios.get(`${baseURL}/user/doctors/${clinicId}`, { headers })
             if (data.error === false) {
                 return data
             }

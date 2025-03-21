@@ -1,7 +1,7 @@
 const moment = require('moment');
 const { validationResult } = require("express-validator");
 const { knex } = require("../database/db");
-const { sendMailAsync, compileTemplate, createUserAuditing } = require('../helpers/helper');
+const { sendMailAsync, compileTemplate, createUserAuditing, formatToLocalDate } = require('../helpers/helper');
 
 function isValidAppointment(appointmentTime, startTime, endTime) {
     const timeToSeconds = (time) => {
@@ -30,7 +30,7 @@ const createAppointment = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { doctor_id, patient_id, appointment_time, medical_history } = req.body;
+    const { doctor_id, patient_id, appointment_time, slot, medical_history } = req.body;
     let auditData = {
         user_id: req.user.id,
         action: 'created',
@@ -45,18 +45,10 @@ const createAppointment = async (req, res) => {
             .select('users.*', 'clinic.name as clinic_name', 'clinic.address as clinic_address', 'clinic_operation_hours.start_time', 'clinic_operation_hours.end_time')
             .where('users.id', doctor_id);
 
-        if (!isValidAppointment(appointment_time, clinic.start_time, clinic.end_time)) {
-            createUserAuditing(auditData);
-            return res.json({
-                error: true,
-                message: "The appointment time is outside the clinic's operating hours. Please choose a valid time.",
-            });
-        }
-
         const [patient] = await knex('users').where('users.id', patient_id);
 
         const [newAppointment] = await knex('appointment')
-            .insert({ doctor_id, patient_id, appointment_time, medical_history })
+            .insert({ doctor_id, patient_id, appointment_time, slot, medical_history })
             .returning('id');
 
         sendMailAsync({
@@ -69,7 +61,7 @@ const createAppointment = async (req, res) => {
                 medical_history: medical_history || "No significant medical history",
                 clinic_name: clinic.clinic_name,
                 appointment_date: new Date(appointment_time).toLocaleDateString(),
-                appointment_time: new Date(appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                appointment_time: slot,
                 current_year: new Date().getFullYear(),
             }, './templates/appointmentNotificationDoctor.html'),
         })
@@ -256,9 +248,7 @@ const getSingleAppointment = async (req, res) => {
         const year = localDate.getFullYear();
         const month = String(localDate.getMonth() + 1).padStart(2, '0');
         const day = String(localDate.getDate()).padStart(2, '0');
-        const hours = String(localDate.getHours()).padStart(2, '0');
-        const minutes = String(localDate.getMinutes()).padStart(2, '0');
-        const localAppointmentTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        const localAppointmentTime = `${year}-${month}-${day}`;
 
         const formattedAppointment = {
             ...appointment,
@@ -289,7 +279,7 @@ const updateAppointment = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { doctor_id, patient_id, appointment_time, medical_history, status, cancel_reason } = req.body;
+    const { doctor_id, patient_id, appointment_time, slot, medical_history, status, cancel_reason } = req.body;
     let auditData = {
         user_id: req.user.id,
         action: 'edited',
@@ -313,28 +303,22 @@ const updateAppointment = async (req, res) => {
             .select('users.*', 'clinic.name as clinic_name', 'clinic.address as clinic_address', 'clinic_operation_hours.start_time', 'clinic_operation_hours.end_time')
             .where('users.id', existingAppointment.doctor_id);
 
-        if (!isValidAppointment(appointment_time, clinic.start_time, clinic.end_time)) {
-            createUserAuditing(auditData);
-            return res.json({
-                error: true,
-                message: "The appointment time is outside the clinic's operating hours. Please choose a valid time.",
-            });
-        }
-
         const localDate = new Date(existingAppointment.appointment_time);
         const year = localDate.getFullYear();
         const month = String(localDate.getMonth() + 1).padStart(2, '0');
         const day = String(localDate.getDate()).padStart(2, '0');
-        const hours = String(localDate.getHours()).padStart(2, '0');
-        const minutes = String(localDate.getMinutes()).padStart(2, '0');
-        const localAppointmentTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        const localAppointmentTime = `${year}-${month}-${day}`;
 
-        const isRescheduled = appointment_time && appointment_time !== localAppointmentTime;
+        const isRescheduled =
+            appointment_time &&
+            appointment_time !== localAppointmentTime ||
+            existingAppointment.slot !== slot;
 
         const updateAppoinmentDetail = {
             doctor_id,
             patient_id,
             appointment_time,
+            slot,
             medical_history,
             status,
             cancel_reason
@@ -357,7 +341,7 @@ const updateAppointment = async (req, res) => {
                 patient_name: `${patient.first_name} ${patient.last_name}`,
                 medical_history: existingAppointment?.medical_history || "No significant medical history",
                 new_date: new Date(appointment_time).toLocaleDateString(),
-                new_time: new Date(appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                new_time: slot,
                 current_year: new Date().getFullYear()
             };
 
@@ -445,7 +429,7 @@ const updateStatus = async (req, res) => {
         const emailTemplateData = {
             patient_name: `${existingAppointment.patient_first_name} ${existingAppointment.patient_last_name}`,
             appointment_date: new Date(existingAppointment.appointment_time).toLocaleDateString(),
-            appointment_time: new Date(existingAppointment.appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            appointment_time: existingAppointment.slot,
             clinic_name: existingAppointment.clinic_name,
             prescription: existingNote.prescription || "No prescription provided.",
             current_year: new Date().getFullYear(),
@@ -532,7 +516,7 @@ const cancelAppointment = async (req, res) => {
             patient_name: `${patient.first_name} ${patient.last_name}`,
             doctor_name: `${doctor.first_name} ${doctor.last_name}`,
             appointment_date: new Date(existingAppointment.appointment_time).toLocaleDateString(),
-            appointment_time: new Date(existingAppointment.appointment_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            appointment_time: existingAppointment.slot,
             cancel_reason: cancel_reason || "No reason provided",
             clinic_name: doctor.clinic_name,
             current_year: new Date().getFullYear(),
@@ -625,11 +609,86 @@ const deleteAppointment = async (req, res) => {
     }
 };
 
+const getAppointmentSlots = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { date } = req.query;
+
+        const doctor = await knex('users')
+            .join('clinic_operation_hours', 'users.clinic_id', 'clinic_operation_hours.clinic_id')
+            .select(
+                'users.*',
+                'clinic_operation_hours.start_time',
+                'clinic_operation_hours.end_time'
+            )
+            .where('users.id', id)
+            .first();
+
+        if (!doctor) {
+            return res.status(404).json({
+                error: true,
+                message: "Doctor not found.",
+                data: [],
+            });
+        }
+
+        const appointments = await knex('appointment')
+            .where('doctor_id', id)
+            .andWhere('status', 'scheduled');
+
+        const startTime = doctor.start_time;
+        const endTime = doctor.end_time;
+
+
+
+        const bookedSlots = appointments
+            .filter(appointment => {
+                const localAppointmentTime = formatToLocalDate(appointment.appointment_time);
+
+                return localAppointmentTime === date;
+            })
+            .map(appointment => appointment.slot);
+
+        const generateSlots = (start, end) => {
+            const slots = [];
+            let currentTime = new Date(`${date}T${start}`);
+            const endTime = new Date(`${date}T${end}`);
+
+            while (currentTime < endTime) {
+                const nextTime = new Date(currentTime.getTime() + 60 * 60 * 1000);
+                if (nextTime > endTime) break;
+
+                const slot = `${currentTime.toTimeString().slice(0, 5)} - ${nextTime.toTimeString().slice(0, 5)}`;
+                slots.push({
+                    slot,
+                    disabled: bookedSlots.includes(slot),
+                });
+
+                currentTime = nextTime;
+            }
+            return slots;
+        };
+
+        const slots = generateSlots(startTime, endTime);
+
+        return res.status(200).json({
+            error: false,
+            message: "Appointment slots retrieved successfully.",
+            data: slots,
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Server error");
+    }
+};
+
+
 module.exports = {
     createAppointment,
     getAllAppointment,
     getSingleAppointment,
     getUserAppointments,
+    getAppointmentSlots,
     updateStatus,
     updateAppointment,
     cancelAppointment,

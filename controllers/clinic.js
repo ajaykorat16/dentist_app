@@ -128,6 +128,29 @@ const getAllClinics = async (req, res) => {
     }
 };
 
+const getAllClinicWithoutPagination = async (req, res) => {
+    try {
+        const clinics = await knex('clinic');
+
+        const formattedClinics = clinics.map((c) => {
+            const photoUrl = c.image ? `${DOMAIN}/images/clinic/${c.image}` : null;
+            return {
+                ...c,
+                image: photoUrl
+            }
+        })
+
+        return res.status(200).json({
+            error: false,
+            message: "All clinics retrieved successfully.",
+            data: formattedClinics,
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send("Server error");
+    }
+};
+
 const getSingleClinic = async (req, res) => {
     try {
         const { id } = req.params
@@ -315,6 +338,7 @@ const deleteClinic = async (req, res) => {
 module.exports = {
     createClinic,
     getAllClinics,
+    getAllClinicWithoutPagination,
     getSingleClinic,
     updateClinic,
     deleteClinic

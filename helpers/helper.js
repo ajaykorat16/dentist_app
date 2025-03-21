@@ -111,6 +111,14 @@ const createUserAuditing = async (data) => {
     }
 };
 
+const formatToLocalDate = (dateInput) => {
+    const localDate = new Date(dateInput);
+    const year = localDate.getFullYear();
+    const month = String(localDate.getMonth() + 1).padStart(2, '0');
+    const day = String(localDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 module.exports = {
     sendMailAsync,
     hashPassword,
@@ -120,5 +128,6 @@ module.exports = {
     isBase64Image,
     uploadImage,
     compileTemplate,
-    createUserAuditing
+    createUserAuditing,
+    formatToLocalDate
 }

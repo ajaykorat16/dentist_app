@@ -11,8 +11,6 @@ router.get('/', auth, isAdmin, getAllUsers)
 
 router.get('/actions', auth, isAdmin, getAllActions)
 
-router.get('/doctors', getAllDoctors)
-
 router.get('/admin-auth', auth, isAdmin, (req, res) => {
     res.status(200).json({ ok: true });
 })
@@ -24,6 +22,8 @@ router.get('/user-auth', auth, (req, res) => {
 router.get('/doctor-auth', auth, isDoctor, (req, res) => {
     res.status(200).json({ ok: true });
 })
+
+router.get('/doctors/:id', getAllDoctors)
 
 router.get('/get-user/:id', auth, isAdmin, getSingleUser)
 

@@ -18,6 +18,7 @@ import UserAppointment from './pages/UserAppointment';
 import ContactUs from './pages/ContactUs';
 import ContactUsList from './pages/ContactUsList';
 import ActionList from './pages/ActionList';
+import DodtorList from './pages/DocorList';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/contact-us" element={<ContactUs />} />
+      <Route path="/clinic/:id" element={<DodtorList />} />
 
       <Route path="/user" element={<UserRoutes />}>
         <Route path="appointment/:id" element={<CreateAppointment />} />

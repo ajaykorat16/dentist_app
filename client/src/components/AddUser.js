@@ -265,18 +265,10 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                                     onChange={(value) => setCredential({ ...credential, role_id: value })}
                                     options={roleOptionsList}
                                     required={true}
+                                    disabled={editMode}
                                     errorMessage='Please select a valid role.'
                                 />
                             </CCol>
-                            <CCol lg={6}>
-                                <ClinicSelection
-                                    multiSelect={false}
-                                    value={credential.clinic_id}
-                                    onChange={(value) => setCredential({ ...credential, clinic_id: value })}
-                                />
-                            </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
                             <CCol lg={6}>
                                 {visible ?
                                     (
@@ -307,6 +299,17 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                                     )
                                 }
                             </CCol>
+                        </CRow>
+                        <CRow className="mb-3">
+                            {credential.role_id == 2 && (
+                                <CCol lg={6}>
+                                    <ClinicSelection
+                                        multiSelect={false}
+                                        value={credential.clinic_id}
+                                        onChange={(value) => setCredential({ ...credential, clinic_id: value })}
+                                    />
+                                </CCol>
+                            )}
                             {editMode &&
                                 <CCol lg={6} className='d-flex align-items-end'>
                                     <div className='d-flex'>

@@ -5,9 +5,11 @@ const multer = require('multer');
 const path = require('path')
 const { auth, isAdmin } = require('../middleware/auth');
 
-const { createClinic, getAllClinics, getSingleClinic, updateClinic, deleteClinic } = require('../controllers/clinic');
+const { createClinic, getAllClinics, getSingleClinic, updateClinic, deleteClinic, getAllClinicWithoutPagination } = require('../controllers/clinic');
 
 router.get('/', auth, isAdmin, getAllClinics)
+
+router.get('/without-pagination', getAllClinicWithoutPagination)
 
 router.get('/:id', auth, isAdmin, getSingleClinic)
 

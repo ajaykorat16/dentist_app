@@ -91,7 +91,7 @@ const UserAppointment = () => {
 
     const formatAppointmentTime = (rowData) => {
         const date = new Date(rowData.appointment_time);
-        return format(date, 'dd-MM-yyyy HH:mm');
+        return format(date, 'dd-MM-yyyy');
     };
 
     return (
@@ -125,7 +125,7 @@ const UserAppointment = () => {
             {/* // <!-- Navbar End --> */}
 
             <div className='px-4 py-4 d-flex flex-column align-items-center'>
-                <h3 class="mb-3 appointment_table">Appointment history</h3>
+                <h3 className="mb-3 appointment_table">Appointment history</h3>
                 {isLoading ? (
                     <Loader />
                 ) : (
@@ -163,6 +163,12 @@ const UserAppointment = () => {
                             sortable
                             filterField="appointment_time"
                             body={formatAppointmentTime}
+                        />
+                        <Column
+                            field="slot"
+                            header="Slot"
+                            sortable
+                            filterField="slot"
                         />
                         <Column
                             field="status"

@@ -102,7 +102,7 @@ function DoctorAppointment() {
 
     const formatAppointmentTime = (rowData) => {
         const date = new Date(rowData.appointment_time);
-        return format(date, 'dd-MM-yyyy HH:mm');
+        return format(date, 'dd-MM-yyyy');
     };
 
     return (
@@ -190,6 +190,12 @@ function DoctorAppointment() {
                                 body={formatAppointmentTime}
                             />
                             <Column
+                                field="slot"
+                                header="Slot"
+                                sortable
+                                filterField="slot"
+                            />
+                            <Column
                                 field="status"
                                 header="Status"
                                 sortable
@@ -197,13 +203,13 @@ function DoctorAppointment() {
                                     const getStatusStyle = (status) => {
                                         switch (status.toLowerCase()) {
                                             case 'scheduled':
-                                                return { backgroundColor: '#e0f7fa', color: '#00796b', padding: '4px 8px', borderRadius: '4px' }; // Light blue background
+                                                return { backgroundColor: '#e0f7fa', color: '#00796b', padding: '4px 8px', borderRadius: '4px' };
                                             case 'completed':
-                                                return { backgroundColor: '#e8f5e9', color: '#388e3c', padding: '4px 8px', borderRadius: '4px' }; // Light green background
+                                                return { backgroundColor: '#e8f5e9', color: '#388e3c', padding: '4px 8px', borderRadius: '4px' };
                                             case 'cancelled':
-                                                return { backgroundColor: '#ffebee', color: '#d32f2f', padding: '4px 8px', borderRadius: '4px' }; // Light red background
+                                                return { backgroundColor: '#ffebee', color: '#d32f2f', padding: '4px 8px', borderRadius: '4px' };
                                             default:
-                                                return { backgroundColor: '#f5f5f5', color: '#616161', padding: '4px 8px', borderRadius: '4px' }; // Light gray background
+                                                return { backgroundColor: '#f5f5f5', color: '#616161', padding: '4px 8px', borderRadius: '4px' };
                                         }
                                     };
 
@@ -235,18 +241,6 @@ function DoctorAppointment() {
                                         />
                                         {rowData.status === 'scheduled' &&
                                             <Button
-                                                icon="pi pi-pencil"
-                                                rounded
-                                                severity="info"
-                                                className="ms-2"
-                                                title="Edit"
-                                                onClick={() => handleCancel(rowData?.id)}
-                                                raised
-                                                style={{ height: '30px', width: '30px' }}
-                                            ></Button>
-                                        }
-                                        {rowData.status === 'scheduled' &&
-                                            <Button
                                                 icon="pi pi-check"
                                                 title="Complete"
                                                 rounded
@@ -256,6 +250,18 @@ function DoctorAppointment() {
                                                 style={{ height: '30px', width: '30px' }}
                                                 raised
                                             />
+                                        }
+                                        {rowData.status === 'scheduled' &&
+                                            <Button
+                                                icon="pi pi-times"
+                                                rounded
+                                                severity="danger"
+                                                className="ms-2"
+                                                title="Cancel"
+                                                onClick={() => handleCancel(rowData?.id)}
+                                                raised
+                                                style={{ height: '30px', width: '30px' }}
+                                            ></Button>
                                         }
                                     </>
                                 )}

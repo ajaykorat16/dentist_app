@@ -70,6 +70,17 @@ const AppointmentProvider = ({ children }) => {
         }
     }
 
+    const getAppointmentSlots = async (id, date) => {
+        try {
+            let { data } = await axios.get(`${baseURL}/appointment/get-slots/${id}?date=${date}`, { headers })
+            if (data.error === false) {
+                return data
+            }
+        } catch (error) {
+            toast.current?.show({ severity: 'error', summary: 'Appointment', detail: 'An error occurred. Please try again later.', life: 3000 })
+        }
+    }
+
     const updateAppointmentStatus = async (id) => {
         try {
             const { data } = await axios.put(`${baseURL}/appointment/update-status/${id}`, { headers });
@@ -141,7 +152,7 @@ const AppointmentProvider = ({ children }) => {
     }
 
     return (
-        <AppointmentContext.Provider value={{ getAllAppointment, createAppointment, getSingleAppointment, updateAppointment, updateAppointmentStatus, cancelAppointment }}>
+        <AppointmentContext.Provider value={{ getAllAppointment, createAppointment, getSingleAppointment, updateAppointment, updateAppointmentStatus, cancelAppointment, getAppointmentSlots }}>
             {children}
         </AppointmentContext.Provider>
     )

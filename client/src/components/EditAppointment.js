@@ -2,28 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { Dialog } from 'primereact/dialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
-import { CCol, CForm, CFormInput, CFormLabel, CRow } from '@coreui/react';
+import { CCol, CForm, CFormInput, CFormLabel, CFormSelect, CRow } from '@coreui/react';
 import { useAppointment } from '../contexts/AppointmentContext';
 
 function EditAppointment({ editAppointmentId, setEditAppointmentId, editMode, setEditMode, fetchAppointments }) {
-    const { getSingleAppointment, updateAppointment } = useAppointment();
+    const { getSingleAppointment, updateAppointment, getAppointmentSlots } = useAppointment();
 
     const [validated, setValidated] = useState(false);
     const [credential, setCredential] = useState({
         appointment_time: "",
+        slot: ""
     });
+    const [slots, setSlots] = useState([]);
+    const [doctorId, setDoctorId] = useState("")
 
     const handleClose = () => {
         setEditMode(false);
         setEditAppointmentId(null);
-        setCredential({ appointment_time: "" });
+        setCredential({ appointment_time: "", slot: "" });
         setValidated(false);
+        setDoctorId("")
     };
 
     const fetchSingleAppointment = async () => {
         try {
             const appointment = await getSingleAppointment(editAppointmentId);
-            setCredential({ appointment_time: appointment.appointment_time });
+            setDoctorId(appointment.doctor_id)
+            setCredential({ appointment_time: appointment.appointment_time, slot: appointment?.slot });
         } catch (error) {
             console.error('Error fetching single appointment:', error);
         }
@@ -64,6 +69,27 @@ function EditAppointment({ editAppointmentId, setEditAppointmentId, editMode, se
         }
     };
 
+    const fetchSlots = async (id, date) => {
+        const data = await getAppointmentSlots(id, date);
+        if (!data.error) {
+            const slotOptionsList = Array.isArray(data?.data)
+                ? data.data.map((s) => ({
+                    label: s.slot,
+                    value: s.slot,
+                    disabled: s.disabled
+                }))
+                : [];
+
+            setSlots(slotOptionsList);
+        }
+    };
+
+    useEffect(() => {
+        if (doctorId && credential?.appointment_time) {
+            fetchSlots(doctorId, credential?.appointment_time);
+        }
+    }, [doctorId, credential?.appointment_time]);
+
     return (
         <div>
             <ConfirmDialog />
@@ -79,12 +105,12 @@ function EditAppointment({ editAppointmentId, setEditAppointmentId, editMode, se
                         <CRow className="mb-3 d-flex flex-column align-items-center">
                             <CCol lg={12}>
                                 <CFormLabel htmlFor="appointmentTime">
-                                    Time <span className="text-danger">*</span>
+                                    Date <span className="text-danger">*</span>
                                 </CFormLabel>
                                 <CFormInput
                                     id="appointmentTime"
-                                    type="datetime-local"
-                                    placeholder="Select date and time"
+                                    type="date"
+                                    placeholder="Select date"
                                     value={credential.appointment_time}
                                     onChange={(e) =>
                                         setCredential((prev) => ({
@@ -95,6 +121,23 @@ function EditAppointment({ editAppointmentId, setEditAppointmentId, editMode, se
                                     required
                                 />
                                 <div className="invalid-feedback">Time is required.</div>
+                            </CCol>
+                        </CRow>
+                        <CRow className="mb-3 d-flex flex-column align-items-center">
+                            <CCol lg={12}>
+                                <CFormLabel className="mb-2 text-center">Time <span className="text-danger">*</span></CFormLabel>
+                                <CFormSelect
+                                    value={credential.slot}
+                                    onChange={(e) => setCredential({ ...credential, slot: e.target.value })}
+                                    feedbackInvalid={"Time is required"}
+                                    required={true}
+                                    className={`is_not_validated pointerCursor`}
+                                >
+                                    <option value="" disabled>Select Time</option>
+                                    {slots.map((o) => (
+                                        <option key={o.value} value={o.value} disabled={o.disabled}>{o.label}</option>
+                                    ))}
+                                </CFormSelect>
                             </CCol>
                         </CRow>
                     </div>
