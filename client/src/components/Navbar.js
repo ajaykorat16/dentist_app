@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { copanyName } from '../lib';
 
 const Navbar = () => {
     const { auth, logout } = useAuth();
@@ -19,7 +20,7 @@ const Navbar = () => {
             <div className="container">
                 <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0">
                     <Link to="/" className="navbar-brand">
-                        <h1 className="m-0 text-uppercase text-primary"><i className="fa-solid fa-house-medical me-2"></i>Dentist</h1>
+                        <h1 className="m-0 text-uppercase text-primary"><i className="fa-solid fa-house-medical me-2"></i>{copanyName}</h1>
                     </Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                         <span className="navbar-toggler-icon"></span>
@@ -65,7 +66,7 @@ const Navbar = () => {
                                     Login
                                 </Link>
                             )}
-                              <Link
+                            <Link
                                 to="/contact-us"
                                 className={`nav-item nav-link ${isActive('/contact-us') ? 'active' : ''}`}
                             >

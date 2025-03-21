@@ -184,7 +184,7 @@ const HomePage = () => {
                                                 <div className="mt-3 p-4">
                                                     <h3>{clinic.name}</h3>
 
-                                                    <p className="m-0">
+                                                    <p className="m-0 text-primary">
                                                         {clinic.address}
                                                     </p>
                                                 </div>

@@ -13,3 +13,4 @@ export const contactDetails = {
   phone: '+012 345 67890'
 }
 
+export const copanyName = 'Dentify'

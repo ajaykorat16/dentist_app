@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { HashLink } from 'react-router-hash-link'
 import { useAuth } from '../contexts/AuthContext'
+import { copanyName } from '../lib'
 
 const HeroSection = () => {
     const {auth} = useAuth()
@@ -12,7 +13,7 @@ const HeroSection = () => {
                 <div className="row justify-content-start">
                     <div className="col-lg-8 text-center text-lg-start">
                         <h5 className="d-inline-block text-primary text-uppercase border-bottom border-5 custom-border">
-                            Welcome To Medinova
+                            Welcome To {copanyName}
                         </h5>
                         <h1 className="display-1 text-white mb-md-4">
                             Best Healthcare Solution In Your City

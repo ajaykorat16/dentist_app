@@ -244,7 +244,7 @@
 }
 
 .hero-header {
-  background: url("../public/images/hero2.webp") top right no-repeat;
+  background: url("../public/images/hero3.webp") top right no-repeat;
   background-size: cover;
 }
 
@@ -501,4 +501,12 @@
   text-overflow: ellipsis;
   overflow-wrap: break-word;
   height: fit-content;
+}
+
+.appointment_table td {
+  background-color: #F3F4F6;
+}
+
+.appointment_table th {
+  background-color: #e2e3e7;
 }
