@@ -10,7 +10,10 @@ const createClinic = async (req, res) => {
             user_id: req.user.id,
             action: 'created',
             description: 'clinic validation error',
-            data: { ...req.body, ...req.file },
+            data: {
+                ...req.body,
+                ...(req.body.image && { image: undefined }),
+            },
         })
         return res.status(400).json({ errors: errors.array() });
     }
@@ -20,7 +23,10 @@ const createClinic = async (req, res) => {
         user_id: req.user.id,
         action: 'created',
         description: 'clinic failure',
-        data: { ...req.body, ...req.file },
+        data: {
+            ...req.body,
+            ...(req.body.image && { image: undefined }),
+        },
     };
 
     try {
@@ -188,7 +194,11 @@ const updateClinic = async (req, res) => {
             user_id: req.user.id,
             action: 'edited',
             description: 'update clinic validation error',
-            data: { ...req.body, ...req.params, ...req.file },
+            data: {
+                ...req.body,
+                ...req.params,
+                ...(req.body.image && { image: undefined }),
+            },
         })
         return res.status(400).json({ errors: errors.array() });
     }
@@ -200,7 +210,11 @@ const updateClinic = async (req, res) => {
         user_id: req.user.id,
         action: 'edited',
         description: 'update clinic failure',
-        data: { ...req.body, ...req.params, ...req.file },
+        data: {
+            ...req.body,
+            ...req.params,
+            ...(req.body.image && { image: undefined }),
+        },
     };
     try {
 

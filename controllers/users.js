@@ -177,20 +177,26 @@ const createUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         createUserAuditing({
-            user_id: null,
+            user_id: req.user.id,
             action: 'created',
             description: 'user validation error',
-            data: { ...req.body, ...req.file },
+            data: {
+                ...req.body,
+                ...(req.body.photo && { photo: undefined }),
+            },
         })
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { first_name, last_name, email, password, role_id, clinic_id, degree, photo } = req.body;
     let auditData = {
-        user_id: null,
+        user_id: req.user.id,
         action: 'created',
         description: 'user failure',
-        data: { ...req.body, ...req.file },
+        data: {
+            ...req.body,
+            ...(req.body.photo && { photo: undefined }),
+        },
     };
 
     try {
@@ -227,10 +233,13 @@ const createUser = async (req, res) => {
         const newUser = await knex('users').insert(userDetail);
 
         auditData = {
-            user_id: null,
+            user_id: req.user.id,
             action: 'created',
             description: 'successfully',
-            data: { ...req.body, ...req.file },
+            data: {
+                ...req.body,
+                ...(req.body.photo && { photo: undefined }),
+            },
         };
         createUserAuditing(auditData);
 
@@ -452,7 +461,11 @@ const updateUser = async (req, res) => {
             user_id: req.user.id,
             action: 'edited',
             description: 'update user failure',
-            data: { ...req.body, ...req.params, ...req.file },
+            data: {
+                ...req.body,
+                ...req.params,
+                ...(req.body.photo && { photo: undefined }),
+            },
         })
         return res.status(400).json({ errors: errors.array() });
     }
@@ -464,7 +477,11 @@ const updateUser = async (req, res) => {
         user_id: req.user.id,
         action: 'edited',
         description: 'update user failure',
-        data: { ...req.body, ...req.params, ...req.file },
+        data: {
+            ...req.body,
+            ...req.params,
+            ...(req.body.photo && { photo: undefined }),
+        },
     };
 
     try {
@@ -534,7 +551,11 @@ const updateUser = async (req, res) => {
             user_id: req.user.id,
             action: 'edited',
             description: 'update user successfully',
-            data: { ...req.body, ...req.params },
+            data: {
+                ...req.body,
+                ...req.params,
+                ...(req.body.photo && { photo: undefined }),
+            },
         };
         createUserAuditing(auditData)
 

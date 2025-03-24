@@ -175,7 +175,7 @@ const HomePage = () => {
                                             <div className="col-12 col-sm-5 h-100">
                                                 <img
                                                     className="img-fluid h-100 w-auto"
-                                                    src={clinic.photo || "/images/blog-2.jpg"}
+                                                    src={clinic.image || "/images/blog-2.jpg"}
                                                     alt={clinic.name}
                                                     style={{ objectFit: "cover" }}
                                                 />
