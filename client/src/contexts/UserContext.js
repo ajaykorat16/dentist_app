@@ -13,10 +13,10 @@ const UserProvider = ({ children }) => {
         Authorization: auth?.token,
     };
 
-    const getAllUsers = async (currentPage, rowsPerPage, sortField, sortOrder, filter, isActiveUsers) => {
+    const getAllUsers = async (currentPage, rowsPerPage, sortField, sortOrder, filter, isActiveUsers, role) => {
         try {
             let { data } = await axios.get(`${baseURL}/user?page=${currentPage}&limit=${rowsPerPage}&sortOrder=${sortOrder}
-                                             &sortField=${sortField}&filter=${filter}&isActiveUsers=${isActiveUsers}`, { headers })
+                                             &sortField=${sortField}&filter=${filter}&isActiveUsers=${isActiveUsers}&role=${role}`, { headers })
             if (data.error === false) {
                 return data
             }

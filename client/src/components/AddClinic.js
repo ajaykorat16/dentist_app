@@ -123,7 +123,7 @@ function AddClinic({ editClinicId, visible, setVisible, setEditClinicId, editMod
     return (
         <div>
             <ConfirmDialog />
-            <Dialog draggable={false} header={`${visible ? 'Create Clinic' : `Edit Clinic`}`} visible={visible || (editMode && editClinicId !== null)} style={{ width: '20vw' }} onHide={handleClose}>
+            <Dialog draggable={false} header={`${visible ? 'Create Clinic' : `Edit Clinic`}`} visible={visible || (editMode && editClinicId !== null)} style={{ width: '30vw' }} onHide={handleClose}>
                 <CForm onSubmit={handleSubmit} noValidate validated={validated}>
                     <div className='fields-container mt-2'>
                         <CRow className="mb-3 align-items-center d-flex flex-column">

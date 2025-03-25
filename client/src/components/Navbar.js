@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { copanyName } from '../lib';
@@ -12,6 +12,15 @@ const Navbar = () => {
         await logout();
         navigate("/login");
     };
+
+    useEffect(() => {
+        if (auth?.user?.role_id === 1) {
+            navigate("/admin/staff/list")
+        }
+        if (auth?.user?.role_id === 2) {
+            navigate("/doctor/appointment/list")
+        }
+    }, [auth?.user]);
 
     const isActive = (path) => location.pathname === path;
 

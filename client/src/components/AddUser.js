@@ -20,7 +20,7 @@ const roleOptionsList = [
     { label: 'Doctor', value: 2 },
 ];
 
-function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, setEditMode, fetchUsers }) {
+function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, setEditMode, fetchUsers, role }) {
     const { createUser, getSingleUser, updateUser, deleteUser, updatePassword, } = useUser()
     const { getSingleClinic } = useClinic()
     const { toast, auth } = useAuth()
@@ -38,7 +38,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
         last_name: "",
         email: "",
         password: "",
-        role_id: "",
+        role_id: role === 'doctor' ? 2 : 1,
         clinic_id: "",
         degree: "",
         photo: "",
@@ -212,7 +212,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                     </div>
                 </CForm>
             </Dialog>
-            <Dialog draggable={false} header={`${visible ? 'Create Doctor' : `Edit Docotor`}`} visible={visible || (editMode && editUserId !== null)} style={{ width: '40vw' }} onHide={handleClose}>
+            <Dialog draggable={false} header={`${visible ? `Create ${role === 'doctor' ? "Doctor" : "Staff"}` : `Edit ${role === 'doctor' ? "Doctor" : "Staff"}`}`} visible={visible || (editMode && editUserId !== null)} style={{ width: '40vw' }} onHide={handleClose}>
                 <CForm onSubmit={handleSubmit} noValidate validated={validated}>
                     <div className='fields-container mt-2'>
                         <CRow className="mb-3">
@@ -249,27 +249,6 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                                 />
                             </CCol>
                             <CCol lg={6}>
-                                <CInput
-                                    label={'Degree'}
-                                    type={'text'}
-                                    value={credential.degree}
-                                    onChange={(value) => setCredential({ ...credential, degree: value })}
-                                />
-                            </CCol>
-                        </CRow>
-                        <CRow className="mb-3">
-                            <CCol lg={6}>
-                                <CSelect
-                                    label="Role"
-                                    value={credential.role_id}
-                                    onChange={(value) => setCredential({ ...credential, role_id: value })}
-                                    options={roleOptionsList}
-                                    required={true}
-                                    disabled={editMode}
-                                    errorMessage='Please select a valid role.'
-                                />
-                            </CCol>
-                            <CCol lg={6}>
                                 {visible ?
                                     (
                                         <div>
@@ -301,6 +280,29 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                             </CCol>
                         </CRow>
                         <CRow className="mb-3">
+                            <CCol lg={6}>
+                                <CSelect
+                                    label="Role"
+                                    value={credential.role_id}
+                                    onChange={(value) => setCredential({ ...credential, role_id: value })}
+                                    options={roleOptionsList}
+                                    required={true}
+                                    disabled={true}
+                                    errorMessage='Please select a valid role.'
+                                />
+                            </CCol>
+                            {role === 'doctor' &&
+                                <CCol lg={6}>
+                                    <CInput
+                                        label={'Degree'}
+                                        type={'text'}
+                                        value={credential.degree}
+                                        onChange={(value) => setCredential({ ...credential, degree: value })}
+                                    />
+                                </CCol>
+                            }
+                        </CRow>
+                        <CRow className="mb-3">
                             {credential.role_id == 2 && (
                                 <CCol lg={6}>
                                     <ClinicSelection
@@ -328,29 +330,31 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                                 </CCol>
                             }
                         </CRow>
-                        <CRow className="mb-3">
-                            <CFormLabel>Image</CFormLabel>
-                            <CCol style={{ position: 'relative' }}>
-                                <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="fileInput" />
-                                <label htmlFor="fileInput">
-                                    <Card
-                                        className="create-card"
-                                        header={credential.photo ? <LazyLoadImage src={credential.photo || 'defaultImageURL'} alt="User" className='create-img' /> :
-                                            <Icon icon="mdi:user" style={{ color: 'black' }} height={100} width={100} />}
-                                    />
-                                </label>
-                                {
-                                    credential.photo &&
-                                    <Icon
-                                        icon="mdi:close"
-                                        className='close-btn'
-                                        height={15}
-                                        width={15}
-                                        onClick={() => setCredential({ ...credential, photo: '' })}
-                                    />
-                                }
-                            </CCol>
-                        </CRow>
+                        {role === 'doctor' &&
+                            <CRow className="mb-3">
+                                <CFormLabel>Image</CFormLabel>
+                                <CCol style={{ position: 'relative' }}>
+                                    <input type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} id="fileInput" />
+                                    <label htmlFor="fileInput">
+                                        <Card
+                                            className="create-card"
+                                            header={credential.photo ? <LazyLoadImage src={credential.photo || 'defaultImageURL'} alt="User" className='create-img' /> :
+                                                <Icon icon="mdi:user" style={{ color: 'black' }} height={100} width={100} />}
+                                        />
+                                    </label>
+                                    {
+                                        credential.photo &&
+                                        <Icon
+                                            icon="mdi:close"
+                                            className='close-btn'
+                                            height={15}
+                                            width={15}
+                                            onClick={() => setCredential({ ...credential, photo: '' })}
+                                        />
+                                    }
+                                </CCol>
+                            </CRow>
+                        }
                     </div>
                     <div className={`d-flex button-container justify-content-end`}>
                         <div className='d-flex'>

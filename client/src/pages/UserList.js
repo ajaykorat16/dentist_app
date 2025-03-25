@@ -12,7 +12,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Checkbox, Switch } from '@mui/material';
 import { CFormLabel } from '@coreui/react';
 
-function UserList() {
+function UserList({ role }) {
     const { getAllUsers, deleteUser } = useUser()
     const { auth } = useAuth()
 
@@ -41,7 +41,7 @@ function UserList() {
     const fetchUsers = async () => {
         try {
             setIsLoading(true);
-            const users = await getAllUsers(currentPage, rowsPerPage, sortField, sortOrder, debouncedFilter, isActiveUsers);
+            const users = await getAllUsers(currentPage, rowsPerPage, sortField, sortOrder, debouncedFilter, isActiveUsers, role);
             if (users && users?.length !== 0) {
                 setUserList(users?.data)
                 setTotalRecords(users?.totalCount)
@@ -54,7 +54,7 @@ function UserList() {
 
     useEffect(() => {
         fetchUsers();
-    }, [currentPage, rowsPerPage, sortField, sortOrder, debouncedFilter, isActiveUsers]);
+    }, [currentPage, rowsPerPage, sortField, sortOrder, debouncedFilter, isActiveUsers, role]);
 
     const handleSorting = async (e) => {
         const field = e.sortField;
@@ -108,8 +108,8 @@ function UserList() {
         <Layout items={userNav.items} navTitle={userNav.header}>
             <div className="d-flex flex-column w-100">
                 <PageHeader
-                    title={'Doctors'}
-                    buttonLabel={'Add New Doctor'}
+                    title={role === 'doctor' ? 'Doctors' : 'Staff'}
+                    buttonLabel={role === 'doctor' ? 'Add New Doctor' : 'Add New Staff'}
                     buttonOnClick={() => setUserVisible(true)}
                     filter={filter}
                     setFilter={setFilter}
@@ -125,6 +125,7 @@ function UserList() {
                             visible={userVisible}
                             setVisible={setUserVisible}
                             fetchUsers={fetchUsers}
+                            role={role}
                         />
                     )}
                     <div className='d-flex align-items-end flex-column mb-2'>
@@ -138,7 +139,7 @@ function UserList() {
                                 />
                             </div>
                             <div>
-                                <CFormLabel className="form-label mb-0">Active Doctors</CFormLabel>
+                                <CFormLabel className="form-label mb-0">{role === 'doctor' ? 'Active Doctors' : 'Active Staff'}</CFormLabel>
                             </div>
                         </div>
                     </div>
@@ -165,7 +166,7 @@ function UserList() {
                             first={(currentPage - 1) * rowsPerPage}
                             onPage={onPageChange}
                             dataKey="id"
-                            emptyMessage="No users found."
+                            emptyMessage={role === 'doctor' ? "No doctors foud." : "No staff found."}
                         >
                             <Column
                                 field="first_name"

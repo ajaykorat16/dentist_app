@@ -72,7 +72,7 @@ function ContactUsList() {
         <Layout items={userNav.items} navTitle={userNav.header}>
             <div className="d-flex flex-column w-100">
                 <PageHeader
-                    title="Contact Us"
+                    title="Inquiries"
                     filter={filter}
                     setFilter={setFilter}
                 />

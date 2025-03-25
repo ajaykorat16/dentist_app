@@ -1,8 +1,9 @@
 export const userNav = {
     items: [
         { text: 'Clinics', to: '/admin/clinic/list' },
-        { text: 'Doctors', to: '/admin/user/list' },
-        { text: 'Contact US', to: '/admin/contact-us/list' },
+        { text: 'Doctors', to: '/admin/doctor/list' },
+        { text: 'Staff', to: '/admin/staff/list' },
+        { text: 'Inquiries', to: '/admin/inquiries/list' },
         { text: 'Actions', to: '/admin/action/list' },
     ],
     header: 'Admin'

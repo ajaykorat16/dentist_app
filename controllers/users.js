@@ -256,7 +256,7 @@ const createUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-    let { sortField, sortOrder, page, limit, filter, isActiveUsers } = req.query;
+    let { sortField, sortOrder, page, limit, filter, isActiveUsers, role } = req.query;
 
     filter = filter || null;
     page = page ? parseInt(page) : 1;
@@ -299,6 +299,14 @@ const getAllUsers = async (req, res) => {
 
         // Add condition to exclude role_id 3
         query = query.andWhereNot('users.role_id', 3);
+
+        if (role) {
+            if (role === 'doctor') {
+                query = query.andWhere('user_role.name', 'dentist');
+            } else if (role === 'staff') {
+                query = query.andWhere('user_role.name', 'admin');
+            }
+        }
 
         if (sortField !== 'undefined' && sortOrder) {
             const sortColumn =

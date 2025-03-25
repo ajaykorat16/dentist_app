@@ -35,9 +35,10 @@ function App() {
       </Route>
 
       <Route path="/admin" element={<AdminRoutes />}>
-        <Route path="user/list" element={<UserList />} />
+        <Route path="doctor/list" element={<UserList role="doctor" />} />
+        <Route path="staff/list" element={<UserList role="staff" />} />
         <Route path="clinic/list" element={<ClnicList />} />
-        <Route path="contact-us/list" element={<ContactUsList />} />
+        <Route path="inquiries/list" element={<ContactUsList />} />
         <Route path="action/list" element={<ActionList />} />
       </ Route>
 
