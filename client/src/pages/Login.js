@@ -34,7 +34,7 @@ function Login() {
             try {
                 const auth = await login(credential);
                 if (auth?.user?.role_id === 1) {
-                    navigate('/admin/user/list');
+                    navigate('/admin/clinic/list');
                 } else if (auth?.user?.role_id === 2) {
                     navigate('/doctor/appointment/list');
                 } if (auth?.user?.role_id === 3) {
