@@ -52,7 +52,7 @@ function Login() {
                 navigate(location.pathname);
             } else {
                 if (auth?.user?.role_id === 1) {
-                    navigate('/admin/user/list');
+                    navigate('/admin/clinic/list');
                 } else if (auth?.user?.role_id === 2) {
                     navigate('/doctor/appointment/list');
                 } else {
