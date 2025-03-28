@@ -54,7 +54,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
             last_name: "",
             email: "",
             password: "",
-            role_id: "",
+            role_id: role === 'doctor' ? 2 : 1,
             clinic_id: "",
             degree: "",
             photo: "",
