@@ -88,7 +88,7 @@ function UserList({ role }) {
     const confirmDelete = async () => {
         return new Promise((resolve) => {
             confirmDialog({
-                message: 'Are you sure you want to delete this user?',
+                message: `Are you sure you want to delete this ${role === 'doctor' ? 'doctor' : 'staff'}`,
                 header: 'Delete Confirmation',
                 icon: 'pi pi-info-circle',
                 position: 'top',
@@ -194,23 +194,18 @@ function UserList({ role }) {
                                 )}
                             />
                             <Column
-                                field="degree"
-                                header="Degree"
-                                sortable
-                                filterField="degree"
-                            />
-                            <Column
                                 field="email"
                                 header="Email"
                                 sortable
                                 filterField="email"
                             />
-                            <Column
-                                field="clinic_name"
-                                header="Clinic"
-                                sortable
-                                filterField="clinic_name"
-                            />
+                            {console.log("role === 'doctor'--", role === 'doctor')}
+                            {role === 'doctor' && (
+                                <Column field="degree" header="Degree" sortable filterField="degree" />
+                            )}
+                            {role === 'doctor' && (
+                                <Column field="clinic_name" header="Clinic" sortable filterField="clinic_name" />
+                            )}
                             <Column
                                 header="Action"
                                 className='action_td'

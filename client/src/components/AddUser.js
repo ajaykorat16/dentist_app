@@ -109,7 +109,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
     const confirmDelete = async () => {
         return new Promise((resolve) => {
             confirmDialog({
-                message: 'Are you sure you want to delete this user?',
+                message: `Are you sure you want to delete this ${role === 'doctor' ? 'doctor' : 'staff'}`,
                 header: 'Delete Confirmation',
                 icon: 'pi pi-info-circle',
                 position: 'top',
