@@ -1,9 +1,21 @@
 import { CFormInput, CFormLabel } from '@coreui/react';
 import React from 'react';
 
-const CInput = ({ value, onChange, label, type = 'text', required = false, className = '', labelClassName = '', format = '', errorMessage = '', placeholder= '' }) => {
+const CInput = ({ 
+    value, 
+    onChange, 
+    label, 
+    type = 'text', 
+    required = false, 
+    className = '', 
+    labelClassName = '', 
+    format = '', 
+    errorMessage = '', 
+    placeholder = '', 
+    minLength = 0 
+}) => {
     const requiredIcon = required ? <span className="text-danger">*</span> : null;
-    const step = (type === 'number') ? "any" : ""
+    const step = (type === 'number') ? "any" : "";
 
     return (
         <div className={className}>
@@ -19,6 +31,7 @@ const CInput = ({ value, onChange, label, type = 'text', required = false, class
                     onChange={(e) => onChange(e.target.value)}
                     format={format}
                     required={required}
+                    minLength={type === 'text' || type === 'password' ? minLength : undefined}
                     feedbackInvalid={errorMessage}
                     className={`${!required ? 'is_not_validated' : ''}`}
                 />

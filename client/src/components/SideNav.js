@@ -50,7 +50,7 @@ const SideNav = ({ items, navTitle }) => {
         auth?.user?.role_id === 1 && {
             title: "Admin",
             icon: <LocalHospitalIcon sx={iconStyle} />,
-            to: "/admin/user/list",
+            to: "/admin/clinic/list",
             parentMatch: location.pathname.includes("/admin/user"),
         },
         auth?.user?.role_id === 2 && {

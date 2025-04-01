@@ -199,7 +199,6 @@ function UserList({ role }) {
                                 sortable
                                 filterField="email"
                             />
-                            {console.log("role === 'doctor'--", role === 'doctor')}
                             {role === 'doctor' && (
                                 <Column field="degree" header="Degree" sortable filterField="degree" />
                             )}

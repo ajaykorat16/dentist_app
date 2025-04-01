@@ -509,4 +509,9 @@
 
 .appointment_table th {
   background-color: #e2e3e7;
+} 
+
+.multiSelect_error {
+  border: 1px solid red;
+  border-radius: 5px;
 }

@@ -27,6 +27,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
 
     const [passwordValidated, setPasswordValidated] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [clinicValidated, setClinicValidated] = useState(false)
 
     const [changePasswordVisible, setChangePasswordVisible] = useState(false)
     const [changePasswordCredential, setChangePasswordCredential] = useState({
@@ -47,6 +48,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
 
     const handleClose = () => {
         setVisible(false);
+        setClinicValidated(false)
         setEditMode(false);
         setEditUserId(null);
         setCredential({
@@ -124,6 +126,7 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
 
         const form = e.currentTarget;
         setValidated(true);
+        setClinicValidated(true)
 
         if (form.checkValidity() === false) {
             e.stopPropagation();
@@ -309,6 +312,8 @@ function AddUser({ editUserId, visible, setVisible, setEditUserId, editMode, set
                                         multiSelect={false}
                                         value={credential.clinic_id}
                                         onChange={(value) => setCredential({ ...credential, clinic_id: value })}
+                                        required={true}
+                                        error={clinicValidated}
                                     />
                                 </CCol>
                             )}

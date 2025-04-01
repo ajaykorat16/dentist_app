@@ -85,6 +85,7 @@ const AuthProvider = ({ children }) => {
             } else {
                 toast.current?.show({ severity: 'error', summary: 'Register', detail: data.message, life: 3000 })
             }
+            return data;
         } catch (error) {
             if (error.response) {
                 const errors = error.response.data.errors;

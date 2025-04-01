@@ -34,8 +34,10 @@ function Register() {
             }
         } else {
             try {
-                await register(credential);
-                navigate("/login")
+                const data = await register(credential);
+                if (!data?.error) {
+                    navigate("/login")
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -47,7 +49,7 @@ function Register() {
             <Toast ref={toast} />
             <div className="vh-100 login-page">
                 <div className="login-left-container">
-                    <img src='/images/a.jpg' className="img-fluid w-100 h-100" alt="Logo" />
+                    <img src='/images/clinic.jpeg' className="img-fluid w-100 h-100" alt="Logo" />
                 </div>
                 <div className="d-flex flex-column justify-content-center align-items-center mx-auto login-right-container">
                     <CForm onSubmit={handleSubmit} noValidate validated={validated}>
@@ -93,7 +95,7 @@ function Register() {
                                 <CInput
                                     label={'Password'}
                                     type={'password'}
-                                    min='8'
+                                    minLength='8'
                                     value={credential.password}
                                     onChange={(value) => setCredential({ ...credential, password: value })}
                                     required={true}
@@ -104,11 +106,11 @@ function Register() {
                                 <CInput
                                     label={'Confirm Password'}
                                     type={'password'}
-                                    min='8'
+                                    minLength='8'
                                     value={credential.confirm_password}
                                     onChange={(value) => setCredential({ ...credential, confirm_password: value })}
                                     required={true}
-                                    errorMessage='Please confirm your password.'
+                                    errorMessage='Please enter a password with 8 or more characters.'
                                 />
                             </CCol>
                         </CRow>

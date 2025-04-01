@@ -76,7 +76,7 @@ const ClinicSelection = ({ className, labelClassName, multiSelect = true, requir
                     isMulti={multiSelect}
                     closeMenuOnSelect={!multiSelect ? true : false}
                     onChange={onChange}
-                    placeholder='Select clincs...'
+                    placeholder='Select clinics...'
                     noOptionsMessage={() => ('No clinics found')}
                     loadingMessage={() => ('Clinics Loading...')}
                     loadOptionsOnMenuOpen={true}
@@ -92,8 +92,15 @@ const ClinicSelection = ({ className, labelClassName, multiSelect = true, requir
                     menuShouldScrollIntoView={false}
                     menuPortalTarget={document.querySelector('body')}
                     styles={customStyles}
+                    required = {required}
                 />
-                {(error && required) && <span className="text-danger error_message">{multiSelect ? `Please select one or more clinic(s)` : 'Please select any one clinic.'}</span>}
+                {error && (
+                    <span className="text-danger error_message">
+                        {multiSelect
+                            ? `Please select one or more clinic(s).`
+                            : 'Please select any one clinic.'}
+                    </span>
+                )}
             </div>
         </div>
     );

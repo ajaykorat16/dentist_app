@@ -67,7 +67,7 @@ function Login() {
             <Toast ref={toast} />
             <div className="vh-100 login-page">
                 <div className="login-left-container">
-                    <img src='/images/about.jpg' className="img-fluid w-100 h-100" alt="Logo" />
+                    <img src='/images/clinic.jpeg' className="img-fluid w-100 h-100" alt="Logo" />
                 </div>
                 <div className="d-flex flex-column justify-content-center align-items-center mx-auto login-right-container">
                     <CForm onSubmit={handleSubmit} noValidate validated={validated}>
@@ -88,7 +88,7 @@ function Login() {
                             <CInput
                                 label={'Password'}
                                 type={'password'}
-                                min='8'
+                                minLength='8'
                                 value={credential.password}
                                 onChange={(value) => setCredential({ ...credential, password: value })}
                                 required={true}

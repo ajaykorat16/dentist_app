@@ -27,7 +27,7 @@ const signupUser = async (req, res) => {
     try {
 
         const existingUser = await knex('users').where('email', email).first();
-        if (existingUser) {
+        if (existingUser?.email) {
             createUserAuditing(auditData)
             return res.status(200).json({
                 error: true,
@@ -119,7 +119,7 @@ const loginUser = async (req, res) => {
     try {
 
         const user = await knex('users').where('email', email).first();
-        if (!user) {
+        if (!user?.email) {
             createUserAuditing(auditData);
 
             return res.status(200).json({
