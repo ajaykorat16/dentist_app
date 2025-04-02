@@ -12,10 +12,12 @@ import { format } from 'date-fns';
 import { Button } from '@mui/material';
 import ViewNotes from '../components/ViewNotes';
 import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const UserAppointment = () => {
     const { auth, toast } = useAuth()
     const { getAllAppointment } = useAppointment()
+    const navigate = useNavigate()
 
     const [appointments, setAppointments] = useState([])
     const [sortField, setSortField] = useState('appointment_time');
@@ -210,7 +212,7 @@ const UserAppointment = () => {
                                     <Button
                                         variant="contained"
                                         color="info"
-                                        onClick={() => handleMedView(rowData?.id)}
+                                        onClick={() => navigate(`/user/appointments-details/${rowData?.id}`)}
                                     >
                                         Info
                                     </Button>

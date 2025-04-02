@@ -236,7 +236,17 @@ const getSingleAppointment = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const appointment = await knex('appointment').where('id', id).first();
+        const appointment = await knex('appointment')
+            .where('appointment.id', id)
+            .join('users', 'appointment.doctor_id', 'users.id')
+            .leftJoin('treatment_notes', 'treatment_notes.id', 'appointment.id')
+            .select(
+                'appointment.*',
+                'treatment_notes.*',
+                knex.raw("CONCAT(users.first_name, ' ', users.last_name) as doctor_name")
+            )
+            .first();
+
         if (!appointment) {
             return res.status(200).json({
                 error: true,
@@ -638,8 +648,6 @@ const getAppointmentSlots = async (req, res) => {
 
         const startTime = doctor.start_time;
         const endTime = doctor.end_time;
-
-
 
         const bookedSlots = appointments
             .filter(appointment => {

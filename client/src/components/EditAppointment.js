@@ -112,6 +112,7 @@ function EditAppointment({ editAppointmentId, setEditAppointmentId, editMode, se
                                     type="date"
                                     placeholder="Select date"
                                     value={credential.appointment_time}
+                                    min={new Date().toISOString().split("T")[0]}
                                     onChange={(e) =>
                                         setCredential((prev) => ({
                                             ...prev,

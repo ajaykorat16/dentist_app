@@ -117,6 +117,7 @@ const CreateAppointment = () => {
                                                         placeholder="Select date"
                                                         value={credential.appointment_time}
                                                         onChange={(e) => setCredential({ ...credential, appointment_time: e.target.value })}
+                                                        min={new Date().toISOString().split("T")[0]}
                                                         required={true}
                                                         feedbackInvalid="Date is required."
                                                     />

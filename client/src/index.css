@@ -515,3 +515,13 @@
   border: 1px solid red;
   border-radius: 5px;
 }
+
+
+@media (min-width: 992px) { 
+  .full_height_layout {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: space-between;
+  }
+}

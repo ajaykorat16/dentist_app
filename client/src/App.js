@@ -19,6 +19,7 @@ import ContactUs from './pages/ContactUs';
 import ContactUsList from './pages/ContactUsList';
 import ActionList from './pages/ActionList';
 import DodtorList from './pages/DocorList';
+import AppointmentDetails from './pages/AppointmentDetails';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
       <Route path="/user" element={<UserRoutes />}>
         <Route path="appointment/:id" element={<CreateAppointment />} />
         <Route path="appointments" element={<UserAppointment />} />
+        <Route path="appointments-details/:appointmentId" element={<AppointmentDetails />} />
       </Route>
 
       <Route path="/admin" element={<AdminRoutes />}>

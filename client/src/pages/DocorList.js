@@ -43,7 +43,6 @@ const DoctorList = () => {
                         <h5 className="d-inline-block text-primary text-uppercase border-bottom border-5">
                             Our Doctors
                         </h5>
-                        <h1 className="display-4">Meet Our Experienced Doctors</h1>
                     </div>
 
                     <div className="row">
