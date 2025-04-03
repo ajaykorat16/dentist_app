@@ -73,7 +73,7 @@ const CreateAppointment = () => {
                         slot: "",
                         medical_history: ""
                     })
-                    navigate("/")
+                    navigate("/user/appointments")
                 }
             } catch (error) {
                 console.log(error);
