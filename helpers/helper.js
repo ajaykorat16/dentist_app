@@ -11,7 +11,7 @@ const { knex } = require("../database/db");
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: 465,
-    secure: true,
+    secure: false,
     auth: {
         user: process.env.MAIL_AUTH_USER,
         pass: process.env.MAIL_AUTH_PASS,
