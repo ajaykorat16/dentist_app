@@ -16,7 +16,7 @@ const HeroSection = () => {
                             Welcome To {copanyName}
                         </h5>
                         <h1 className="display-1 text-white mb-md-4">
-                            Best Healthcare Solution In Your City
+                            Best Dentalcare Solution In Your City
                         </h1>
                         <div className="pt-2">
                             <HashLink

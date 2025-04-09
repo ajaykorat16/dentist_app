@@ -65,7 +65,7 @@ const ContactUs = () => {
                         <h1 className="display-4">Please Feel Free To Contact Us</h1>
                     </div>
                     <div className="row g-5 mb-5">
-                        <div className="col-lg-4">
+                        <div className="col-lg-6">
                             <div className="bg-light rounded d-flex flex-column align-items-center justify-content-center text-center" style={{ height: "200px" }}>
                                 <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
                                     <i className="fa-solid fa-2x fa-location-arrow text-white" style={{ transform: "rotate(15deg)" }}></i>
@@ -73,15 +73,7 @@ const ContactUs = () => {
                                 <h6 className="mb-0">{contactDetails.address}</h6>
                             </div>
                         </div>
-                        <div className="col-lg-4">
-                            <div className="bg-light rounded d-flex flex-column align-items-center justify-content-center text-center" style={{ height: "200px" }}>
-                                <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
-                                    <i className="fa-solid fa-phone-flip fa-2x text-white" style={{ transform: "rotate(15deg)" }}></i>
-                                </div>
-                                <h6 className="mb-0">{contactDetails.phone}</h6>
-                            </div>
-                        </div>
-                        <div className="col-lg-4">
+                        <div className="col-lg-6">
                             <div className="bg-light rounded d-flex flex-column align-items-center justify-content-center text-center" style={{ height: "200px" }}>
                                 <div className="d-flex align-items-center justify-content-center icon_bg rounded-circle mb-4" style={{ width: "100px", height: "70px", transform: "rotate(-15deg)" }}>
                                     <i className="fa-solid fa-envelope-open fa-2x text-white" style={{ transform: "rotate(15deg)" }}></i>

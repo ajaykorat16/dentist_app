@@ -8,9 +8,8 @@ export const baseURL =
     : prod;
 
 export const contactDetails = {
-  address: '123 Street, New York, USA',
-  email: 'info@example.com',
-  phone: '+012 345 67890'
+  address: '108 University Ave E, Waterloo, ON N2J 2W2',
+  email: 'info@dentify.com',
 }
 
 export const copanyName = 'Dentify'

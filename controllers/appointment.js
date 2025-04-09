@@ -3,21 +3,6 @@ const { validationResult } = require("express-validator");
 const { knex } = require("../database/db");
 const { sendMailAsync, compileTemplate, createUserAuditing, formatToLocalDate } = require('../helpers/helper');
 
-function isValidAppointment(appointmentTime, startTime, endTime) {
-    const timeToSeconds = (time) => {
-        const [hours, minutes, seconds] = time.split(':').map(Number);
-        return hours * 3600 + minutes * 60 + (seconds || 0);
-    };
-
-    const appointmentTimeOnly = appointmentTime.split('T')[1] + ':00';
-
-    const appointmentSeconds = timeToSeconds(appointmentTimeOnly);
-    const startSeconds = timeToSeconds(startTime);
-    const endSeconds = timeToSeconds(endTime);
-
-    return appointmentSeconds >= startSeconds && appointmentSeconds <= endSeconds;
-}
-
 const createAppointment = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

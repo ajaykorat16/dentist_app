@@ -7,28 +7,14 @@ const { hashPassword, comparePassword, isBase64Image, uploadImage, sendMailAsync
 const signupUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        createUserAuditing({
-            user_id: null,
-            action: 'registered',
-            description: 'user validation error',
-            data: req.body,
-        })
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { first_name, last_name, email, password } = req.body;
-
-    let auditData = {
-        user_id: null,
-        action: 'registered',
-        description: 'user failure',
-        data: req.body,
-    };
     try {
 
         const existingUser = await knex('users').where('email', email).first();
         if (existingUser?.email) {
-            createUserAuditing(auditData)
             return res.status(200).json({
                 error: true,
                 message: "User already registered with this email.",
@@ -37,7 +23,6 @@ const signupUser = async (req, res) => {
 
         const role = await knex('user_role').where('name', 'Patient').first();
         if (!role) {
-            createUserAuditing(auditData)
             return res.status(400).json({
                 error: true,
                 message: "Patient role not found. Please check the database.",
@@ -72,21 +57,11 @@ const signupUser = async (req, res) => {
             html: emailContent,
         });
 
-        auditData = {
-            user_id: null,
-            action: 'registered',
-            description: 'successfully',
-            data: req.body,
-        };
-
-        createUserAuditing(auditData)
-
         return res.status(201).json({
             error: false,
             message: `Thank you, ${first_name}, for registering with us! Your account has been created successfully`,
         });
     } catch (error) {
-        createUserAuditing(auditData)
         console.error("Error in signupUser:", error.message);
         res.status(500).json({
             error: true,
@@ -99,12 +74,6 @@ const signupUser = async (req, res) => {
 const loginUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        createUserAuditing({
-            user_id: null,
-            action: 'login',
-            description: 'validation error',
-            data: req.body,
-        })
         return res.status(400).json({ error: true, errors: errors.array() });
     }
 
@@ -120,8 +89,6 @@ const loginUser = async (req, res) => {
 
         const user = await knex('users').where('email', email).first();
         if (!user?.email) {
-            createUserAuditing(auditData);
-
             return res.status(200).json({
                 error: true,
                 message: "Wrong credentials. Please check your email or password.",
@@ -129,8 +96,6 @@ const loginUser = async (req, res) => {
         }
 
         if (!user?.is_active) {
-            createUserAuditing(auditData);
-
             return res.status(200).json({
                 error: true,
                 message: "Your account has been marked as inactive. You do not have permission to log in to the system. Please contact the system administrator.",
@@ -139,8 +104,6 @@ const loginUser = async (req, res) => {
 
         const match = await comparePassword(password, user.password);
         if (!match) {
-            createUserAuditing(auditData);
-
             return res.status(200).json({
                 error: true,
                 message: "Wrong credentials. Please check your email or password.",
@@ -148,14 +111,6 @@ const loginUser = async (req, res) => {
         }
 
         const token = await jwt.sign({ user }, process.env.JWT_SECRET_KEY, { expiresIn: "365 days", });
-
-        auditData = {
-            ...auditData,
-            user_id: user.id,
-            description: 'successfully',
-        };
-
-        createUserAuditing(auditData);
 
         return res.status(200).send({
             error: false,
@@ -166,7 +121,6 @@ const loginUser = async (req, res) => {
             }
         });
     } catch (error) {
-        createUserAuditing(auditData);
         console.log(error.message);
         return res.status(500).send("Server error");
     }
@@ -176,33 +130,14 @@ const loginUser = async (req, res) => {
 const createUser = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        createUserAuditing({
-            user_id: req.user.id,
-            action: 'created',
-            description: 'user validation error',
-            data: {
-                ...req.body,
-                ...(req.body.photo && { photo: undefined }),
-            },
-        })
         return res.status(400).json({ errors: errors.array() });
     }
 
     const { first_name, last_name, email, password, role_id, clinic_id, degree, photo } = req.body;
-    let auditData = {
-        user_id: req.user.id,
-        action: 'created',
-        description: 'user failure',
-        data: {
-            ...req.body,
-            ...(req.body.photo && { photo: undefined }),
-        },
-    };
 
     try {
         const existingUser = await knex('users').where('email', email).first()
         if (existingUser) {
-            createUserAuditing(auditData);
             return res.status(200).json({
                 error: true,
                 message: "User already register with this email.",
@@ -232,16 +167,6 @@ const createUser = async (req, res) => {
 
         const newUser = await knex('users').insert(userDetail);
 
-        auditData = {
-            user_id: req.user.id,
-            action: 'created',
-            description: 'successfully',
-            data: {
-                ...req.body,
-                ...(req.body.photo && { photo: undefined }),
-            },
-        };
-        createUserAuditing(auditData);
 
         return res.status(201).json({
             error: false,
@@ -250,7 +175,6 @@ const createUser = async (req, res) => {
         });
     } catch (error) {
         console.log(error.message);
-        createUserAuditing(auditData);
         res.status(500).send("Server error");
     }
 };
